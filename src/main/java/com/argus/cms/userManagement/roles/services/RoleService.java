@@ -11,4 +11,5 @@ public interface RoleService {
     public Roles addRole(Roles role);
     public List<Roles> getRoles();
     public Optional<Roles> findByName(String name);
+    public Optional<Roles> findById(Long id);
 }

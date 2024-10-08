@@ -1,7 +1,9 @@
 package com.argus.cms.config;
 
 import com.argus.cms.filters.JwtAuthFilter;
+import com.argus.cms.services.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +25,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class SecurityConfig {
 
+    @Autowired
+//    @Qualifier("delegatedAuthenticationEntryPoint")
+//    AuthenticationEntryPoint authEntryPoint;
     private JwtAuthFilter jwtAuthFilter;
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -30,12 +35,14 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable()).
                 authorizeHttpRequests(requests ->
-                        requests.requestMatchers("/api/user/login/**", "/api/user/register").permitAll().
-                                anyRequest().authenticated()
+                        requests.requestMatchers("/api/user/login", "/api/user/register","/api/roles/**")
+                                .permitAll().anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .authenticationProvider(authenticationProvider())
+//                .exceptionHandling(c -> c
+//                        .authenticationEntryPoint(authEntryPoint))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -57,4 +64,5 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
 }

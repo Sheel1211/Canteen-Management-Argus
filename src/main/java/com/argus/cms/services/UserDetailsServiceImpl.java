@@ -1,4 +1,4 @@
-package com.argus.cms.config;
+package com.argus.cms.services;
 
 import com.argus.cms.userManagement.users.entities.Users;
 import com.argus.cms.userManagement.users.repositories.UserRepository;

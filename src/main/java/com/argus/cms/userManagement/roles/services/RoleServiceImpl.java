@@ -29,4 +29,7 @@ public class RoleServiceImpl implements RoleService {
     public Optional<Roles> findByName(String name) {
         return roleRepository.findByName(name);
     }
+    public Optional<Roles> findById(Long roleId){
+        return roleRepository.findById(roleId);
+    }
 }
