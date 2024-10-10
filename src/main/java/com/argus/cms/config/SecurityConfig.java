@@ -30,13 +30,19 @@ public class SecurityConfig {
 //    AuthenticationEntryPoint authEntryPoint;
     private JwtAuthFilter jwtAuthFilter;
     private UserDetailsServiceImpl userDetailsServiceImpl;
+    private static final String[] WHITE_LIST_URL = { "/api/v1/auth/**", "/v2/api-docs", "/v3/api-docs",
+            "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+            "/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html", "/api/auth/**",
+            "/api/test/**", "/api/user/login" , "/api/user/register","/api/roles/**"};
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return http.csrf(csrf -> csrf.disable()).
                 authorizeHttpRequests(requests ->
-                        requests.requestMatchers("/api/user/login", "/api/user/register","/api/roles/**")
-                                .permitAll().anyRequest().authenticated()
+                        requests.requestMatchers(WHITE_LIST_URL)
+                                .permitAll().
+                        anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
@@ -64,5 +70,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
 
 }

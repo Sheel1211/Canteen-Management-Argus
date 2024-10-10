@@ -60,6 +60,4 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("invalid user request..!!");
         }
     }
-
-
 }

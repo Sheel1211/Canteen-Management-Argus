@@ -2,12 +2,14 @@ package com.argus.cms.userManagement.users.mappers;
 
 import com.argus.cms.userManagement.roles.entities.Roles;
 import com.argus.cms.userManagement.roles.services.RoleService;
-import com.argus.cms.userManagement.users.dto.UserDTO;
+import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
+import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
 import com.argus.cms.userManagement.users.entities.Users;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -20,11 +22,10 @@ public abstract class UserMapper {
     protected RoleService roleService;
 
     @Mapping(target = "roles", source = "roles", qualifiedByName = "mapRolesToRoleNames")
-    @Mapping(target = "password",ignore = true)
-    public abstract UserDTO userToUserDTO(Users user);
+    public abstract RegistrationResponseDTO userToRegistrationResponseDTO(Users user);
 
     @Mapping(target = "roles", source = "roles", qualifiedByName = "mapRoleNamesToRoles")
-    public abstract Users userDTOToUser(UserDTO userDTO);
+    public abstract Users registrationRequestDTOToUser(RegistrationRequestDTO userDTO);
 
     @Named("mapRolesToRoleNames")
     public Set<String> mapRolesToRoleNames(Set<Roles> roles) {
