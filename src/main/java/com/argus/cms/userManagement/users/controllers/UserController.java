@@ -3,6 +3,7 @@ package com.argus.cms.userManagement.users.controllers;
 import com.argus.cms.userManagement.users.dto.LoginRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
+import com.argus.cms.userManagement.users.entities.Users;
 import com.argus.cms.userManagement.users.services.UserService;
 import com.argus.cms.userManagement.users.transformers.UserTransformer;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,8 +36,19 @@ public class UserController {
         return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<String> loginWithExceptionHandler() {
-        return ResponseEntity.ok("Success");
+    @GetMapping("/{id}")
+    public ResponseEntity<Users> getUserById(@PathVariable Long id) {
+
+        Users user=userService.findUserById(id);
+        return ResponseEntity.ok(user);
     }
+
+    @GetMapping("/userName")
+    public ResponseEntity<Users> getUserByUserName(@RequestParam String userName) {
+
+        Users user=userService.findByUserName(userName);
+        return ResponseEntity.ok(user);
+    }
+
+
 }

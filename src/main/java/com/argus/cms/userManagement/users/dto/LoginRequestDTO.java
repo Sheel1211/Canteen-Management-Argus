@@ -16,7 +16,7 @@ public class LoginRequestDTO {
     private String userName;
 
     @NotBlank(message = "Password cannot be blank")
-    @Size(min = 8, message = "Password must be at least 8 characters")
+    @Size(min = 4, message = "Password must be at least 8 characters")
     private String password;
 }
 

@@ -1,5 +1,6 @@
 package com.argus.cms.userManagement.users.services;
 
+import com.argus.cms.exceptions.UserNotFoundException;
 import com.argus.cms.services.JwtService;
 import com.argus.cms.userManagement.roles.entities.Roles;
 import com.argus.cms.userManagement.users.entities.Users;
@@ -32,25 +33,31 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    public Users getUser(Long userId) {
-        return userRepository.findById(userId).orElse(null);
+    public Users findUserById(Long id) {
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found."));
+        return user;
     }
+
 
     @Override
     public List<Users> getUsers() {
         return userRepository.findAll();
     }
 
+
     @Override
-    public Optional<Users> findByUserName(String username) {
-        return userRepository.findByUserName(username);
+    public Users findByUserName(String username) {
+        Users user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found."));
+        return user;
     }
+
 
     @Override
     public String loginUser(String userName, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
-        Users user = this.findByUserName(userName).orElse(null);
+        Users user = this.findByUserName(userName);
 
         if (authentication.isAuthenticated()) {
             Set<Roles> userRoles = user.getRoles();

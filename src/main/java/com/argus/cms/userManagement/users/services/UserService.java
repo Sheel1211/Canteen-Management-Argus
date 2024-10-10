@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface UserService {
     Users saveUser(Users user);
 
-    Users getUser(Long userId);
+    Users findUserById(Long userId);
 
     List<Users> getUsers();
 
-    Optional<Users> findByUserName(String username);
+    Users findByUserName(String username);
 
     String loginUser(String userName, String password);
 }
