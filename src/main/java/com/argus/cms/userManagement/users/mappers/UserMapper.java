@@ -4,6 +4,7 @@ import com.argus.cms.userManagement.roles.entities.Roles;
 import com.argus.cms.userManagement.roles.services.RoleService;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
+import com.argus.cms.userManagement.users.dto.UserResponseDTO;
 import com.argus.cms.userManagement.users.entities.Users;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,7 +12,6 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,9 +36,11 @@ public abstract class UserMapper {
     public Set<Roles> mapRoleNamesToRoles(Set<String> roleNames) {
         Set<Roles> roles = new HashSet<>();
         for (String roleName : roleNames) {
-            Optional<Roles> role = roleService.findByName(roleName);
-            role.ifPresent(roles::add);
+            Roles role = roleService.findByName(roleName);
+            roles.add(role);
         }
         return roles;
     }
+
+    public abstract UserResponseDTO userToUserResponseDTO(Users user);
 }

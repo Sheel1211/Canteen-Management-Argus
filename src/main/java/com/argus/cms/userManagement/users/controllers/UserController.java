@@ -3,7 +3,7 @@ package com.argus.cms.userManagement.users.controllers;
 import com.argus.cms.userManagement.users.dto.LoginRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
-import com.argus.cms.userManagement.users.entities.Users;
+import com.argus.cms.userManagement.users.dto.UserResponseDTO;
 import com.argus.cms.userManagement.users.services.UserService;
 import com.argus.cms.userManagement.users.transformers.UserTransformer;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,18 +37,21 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Users> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+        UserResponseDTO userResponseDTO = userTransformer.findUserByIdTransformer(id);
+        return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
+    }
 
-        Users user=userService.findUserById(id);
-        return ResponseEntity.ok(user);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteUserById(@PathVariable Long id) {
+        userTransformer.deleteUserByIdTransformer(id);
+        return new ResponseEntity<>("User Deleted Successfully",HttpStatus.OK);
     }
 
     @GetMapping("/userName")
-    public ResponseEntity<Users> getUserByUserName(@RequestParam String userName) {
-
-        Users user=userService.findByUserName(userName);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserResponseDTO> getUserByUserName(@RequestParam String userName) {
+        UserResponseDTO userResponseDTO = userTransformer.findUserByUserNameTransformer(userName);
+        return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
     }
-
 
 }

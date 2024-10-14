@@ -9,7 +9,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class RoleMapper {
 
-
     public abstract RoleDTO roleToRoleDTO(Roles role);
 
     public abstract Roles roleDTOToRole(RoleDTO roleDTO);

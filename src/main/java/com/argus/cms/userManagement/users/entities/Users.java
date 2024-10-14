@@ -13,48 +13,48 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-        @Entity
-        @Table(name = "users")
-        @Getter
-        @Setter
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public class Users {
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Users {
 
-            @Id
-            @GeneratedValue(strategy = GenerationType.IDENTITY)
-            private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-            @Column(nullable = false, unique = true)
-            private String userName;
+    @Column(nullable = false, unique = true)
+    private String userName;
 
 
-            @Column(nullable = false)
-            private String password;
+    @Column(nullable = false)
+    private String password;
 
-            @Column(name = "created_at")
-            @CreationTimestamp
-            private LocalDateTime createdAt;
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-            @Column(nullable = false)
-            private Integer balance = 0;
+    @Column(nullable = false)
+    private Integer balance = 0;
 
-            @Column(name = "isActive", nullable = false)
-            private Boolean isActive = true;
+    @Column(name = "isActive", nullable = false)
+    private Boolean isActive = true;
 
-            @ManyToMany(fetch = FetchType.EAGER)
-            @JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
-            @JsonIgnore
-            private Set<Roles> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
+    @JsonIgnore
+    private Set<Roles> roles = new HashSet<>();
 
-            @PrePersist
-            public void prePersist() {
-                if (balance == null) {
-                    balance = 0;
-                }
-                if (isActive == null) {
-                    isActive = true;
-                }
-            }
-
+    @PrePersist
+    public void prePersist() {
+        if (balance == null) {
+            balance = 0;
         }
+        if (isActive == null) {
+            isActive = true;
+        }
+    }
+
+}

@@ -1,6 +1,6 @@
 package com.argus.cms.userManagement.users.services;
 
-import com.argus.cms.exceptions.UserNotFoundException;
+import com.argus.cms.exceptions.EntityNotFoundException;
 import com.argus.cms.services.JwtService;
 import com.argus.cms.userManagement.roles.entities.Roles;
 import com.argus.cms.userManagement.users.entities.Users;
@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -35,8 +34,15 @@ public class UserServiceImpl implements UserService {
 
     public Users findUserById(Long id) {
         Users user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found."));
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found."));
         return user;
+    }
+
+    @Override
+    public void deleteUserById(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + userId + " not found."));
+        userRepository.deleteById(userId);
     }
 
 
@@ -49,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users findByUserName(String username) {
         Users user = userRepository.findByUserName(username)
-                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found."));
+                .orElseThrow(() -> new EntityNotFoundException("User with username " + username + " not found."));
         return user;
     }
 
