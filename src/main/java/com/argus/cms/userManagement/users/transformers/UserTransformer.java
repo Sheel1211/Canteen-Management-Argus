@@ -16,6 +16,11 @@ public class UserTransformer {
     private UserMapper userMapper;
     private UserService userService;
 
+    public String loginUser(String userName, String password){
+        System.out.println("Hello");
+        return userService.loginUser(userName,password);
+    }
+
     public RegistrationResponseDTO registrationTransformer(RegistrationRequestDTO registrationRequestDTO) {
         Users user = userMapper.registrationRequestDTOToUser(registrationRequestDTO);
         Users createdUser = userService.saveUser(user);

@@ -4,7 +4,6 @@ import com.argus.cms.userManagement.users.dto.LoginRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
 import com.argus.cms.userManagement.users.dto.UserResponseDTO;
-import com.argus.cms.userManagement.users.services.UserService;
 import com.argus.cms.userManagement.users.transformers.UserTransformer;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -20,12 +19,11 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @Validated
 public class UserController {
-    private UserService userService;
     private UserTransformer userTransformer;
 
     @PostMapping("/login")
     public ResponseEntity<String> Login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
-        String token = userService.loginUser(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
+        String token = userTransformer.loginUser(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         return new ResponseEntity<>("User logged In Successfully",HttpStatus.OK);
     }
