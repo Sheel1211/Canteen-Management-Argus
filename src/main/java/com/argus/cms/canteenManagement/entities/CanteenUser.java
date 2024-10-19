@@ -1,6 +1,6 @@
 package com.argus.cms.canteenManagement.entities;
 
-import com.argus.cms.commonEntityFields.AuditEntity;
+import com.argus.cms.audit.AuditEntity;
 import com.argus.cms.userManagement.users.entities.Users;
 import jakarta.persistence.*;
 import lombok.Data;

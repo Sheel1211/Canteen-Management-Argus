@@ -1,8 +1,12 @@
 package com.argus.cms.userManagement.roles.entities;
 
+import com.argus.cms.audit.AuditEntity;
 import com.argus.cms.userManagement.users.entities.Users;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +17,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Roles {
+public class Roles extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

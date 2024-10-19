@@ -1,5 +1,6 @@
 package com.argus.cms.userManagement.users.services;
 
+import com.argus.cms.config.CustomUserDetails;
 import com.argus.cms.userManagement.users.entities.Users;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface UserService {
     Users findByUserName(String username);
 
     String loginUser(String userName, String password);
+
+    CustomUserDetails getCurrentUser();
 }

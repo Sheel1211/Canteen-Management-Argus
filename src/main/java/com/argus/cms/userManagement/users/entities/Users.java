@@ -1,5 +1,6 @@
 package com.argus.cms.userManagement.users.entities;
 
+import com.argus.cms.audit.AuditEntity;
 import com.argus.cms.userManagement.roles.entities.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -7,9 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Users {
+public class Users extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,13 +27,8 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String userName;
 
-
     @Column(nullable = false)
     private String password;
-
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private Integer balance = 0;

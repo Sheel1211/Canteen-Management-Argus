@@ -1,9 +1,11 @@
 package com.argus.cms.userManagement.users.controllers;
 
+import com.argus.cms.config.CustomUserDetails;
 import com.argus.cms.userManagement.users.dto.LoginRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
 import com.argus.cms.userManagement.users.dto.UserResponseDTO;
+import com.argus.cms.userManagement.users.services.UserService;
 import com.argus.cms.userManagement.users.transformers.UserTransformer;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class UserController {
     private UserTransformer userTransformer;
+    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<String> Login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
@@ -30,6 +33,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) {
+        System.out.println(registrationRequestDTO);
         RegistrationResponseDTO registrationResponseDTO = userTransformer.registrationTransformer(registrationRequestDTO);
         return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
     }
@@ -52,4 +56,9 @@ public class UserController {
         return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<CustomUserDetails> getCurrentUser(){
+        CustomUserDetails customUserDetails = userService.getCurrentUser();
+        return new ResponseEntity<>(customUserDetails,HttpStatus.OK);
+    }
 }

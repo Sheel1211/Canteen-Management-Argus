@@ -16,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,5 +79,24 @@ public class DefaultExceptionHandler {
     public ResponseEntity<String> handleUserNotFoundException(EntityNotFoundException ex) {
         logger.error("User not found: {}", ex.getMessage(), ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<String> handleSqlException(SQLException ex) {
+//        logger.error("User not found: {}", ex.getMessage(), ex);
+        String sqlState = ex.getSQLState();
+        int errorCode = ex.getErrorCode();
+        String errorMessage = ex.getMessage();
+
+        if (sqlState.equals("23505") || errorCode == 1062) {
+            return new ResponseEntity<>("Username already exists. Please choose a different username.", HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        String errorMessage = ex.getMessage();
+        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

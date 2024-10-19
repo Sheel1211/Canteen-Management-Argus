@@ -17,7 +17,6 @@ public class UserTransformer {
     private UserService userService;
 
     public String loginUser(String userName, String password){
-        System.out.println("Hello");
         return userService.loginUser(userName,password);
     }
 

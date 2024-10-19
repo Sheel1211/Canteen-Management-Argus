@@ -1,6 +1,6 @@
 package com.argus.cms.canteenManagement.entities;
 
-import com.argus.cms.commonEntityFields.AuditEntity;
+import com.argus.cms.audit.AuditEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,6 +19,7 @@ public class Canteen extends AuditEntity {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
-    @OneToOne(mappedBy = "canteen", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "canteen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CanteenUser canteenUser;
+
 }
