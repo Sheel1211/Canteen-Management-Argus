@@ -1,9 +1,11 @@
 package com.argus.cms.menuManagement.services;
 
+import com.argus.cms.exceptions.ConcurrentModificationException;
 import com.argus.cms.exceptions.EntityNotFoundException;
 import com.argus.cms.menuManagement.entities.FoodItem;
 import com.argus.cms.menuManagement.repositories.FoodItemRepository;
 import lombok.AllArgsConstructor;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +43,19 @@ public class FoodItemServiceImpl implements FoodItemService{
             throw new EntityNotFoundException("Food Item doesn't exist with id " + foodItemId);
         }
         foodItem.setIsDeleted(true);
+    }
+
+    @Override
+    @Transactional
+    public FoodItem updateFoodItem(Long foodItemId,FoodItem foodItemReq) {
+
+        try{
+            FoodItem existingFoodItem  = this.getFoodItemById(foodItemId);
+            existingFoodItem.setPrice(foodItemReq.getPrice());
+            FoodItem updatedFoodItem= foodItemRepository.save(existingFoodItem);
+            return updatedFoodItem;
+        }catch (OptimisticEntityLockException e) {
+            throw new ConcurrentModificationException("Failed to update food item due to concurrent modification. Please try again.");
+        }
     }
 }

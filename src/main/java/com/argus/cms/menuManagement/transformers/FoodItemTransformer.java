@@ -31,6 +31,12 @@ public class FoodItemTransformer {
         return foodItemMapper.toResponseDTO(foodItem);
     }
 
+    public  FoodItemResponseDTO updateFoodItem(Long foodItemId,FoodItemDTO foodItemDTO)
+    {
+        FoodItem reqFoodItem= foodItemMapper.toEntity(foodItemDTO);
+        FoodItem updatedFoodItem = foodItemService.updateFoodItem(foodItemId,reqFoodItem);
+        return foodItemMapper.toResponseDTO(updatedFoodItem);
+    }
 
     public void deleteFoodItemById(Long foodItemId)
     {

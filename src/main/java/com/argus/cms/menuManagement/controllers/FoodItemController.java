@@ -3,6 +3,7 @@ package com.argus.cms.menuManagement.controllers;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
 import com.argus.cms.menuManagement.dtos.GetAllFoodItemResponseDTO;
+import com.argus.cms.menuManagement.entities.FoodItem;
 import com.argus.cms.menuManagement.transformers.FoodItemTransformer;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,12 @@ public class FoodItemController {
     @GetMapping("/{foodItemId}")
     public ResponseEntity<FoodItemResponseDTO> getFoodItemById(@PathVariable Long foodItemId) {
         FoodItemResponseDTO foodItem = foodItemTransformer.getFoodItemById(foodItemId);
+        return new ResponseEntity<>(foodItem, HttpStatus.OK);
+    }
+
+    @PutMapping("/{foodItemId}")
+    public ResponseEntity<FoodItemResponseDTO> updateFoodItem(@PathVariable Long foodItemId, @RequestBody FoodItemDTO foodItemReqDTO) {
+        FoodItemResponseDTO foodItem = foodItemTransformer.updateFoodItem(foodItemId,foodItemReqDTO);
         return new ResponseEntity<>(foodItem, HttpStatus.OK);
     }
 
