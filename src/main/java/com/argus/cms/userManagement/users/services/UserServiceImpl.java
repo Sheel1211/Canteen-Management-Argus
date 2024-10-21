@@ -8,6 +8,7 @@ import com.argus.cms.userManagement.users.entities.Users;
 import com.argus.cms.userManagement.users.mappers.UserMapper;
 import com.argus.cms.userManagement.users.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,6 +44,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Users saveUser(Users user) {
+        Users toSaveUser = this.findByUserName(user.getUserName());
+        if (toSaveUser != null) {
+            throw new DataIntegrityViolationException("Username Already Exists! Please choose a different username.");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
