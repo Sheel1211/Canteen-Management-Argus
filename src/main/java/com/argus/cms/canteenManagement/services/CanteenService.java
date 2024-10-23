@@ -12,4 +12,8 @@ public interface CanteenService {
     Canteen getCanteenById(Long canteenId);
 
     void deleteCanteenById(Long canteenId);
+
+    Canteen updateCanteenStatusById(Long canteenId);
+
+    Canteen updateCanteenNameById(Long canteenId, Canteen canteen);
 }

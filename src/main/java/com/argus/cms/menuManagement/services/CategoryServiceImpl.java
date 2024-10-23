@@ -54,5 +54,11 @@ public class CategoryServiceImpl implements CategoryService{
         category.setIsDeleted(true);
     }
 
-
+    @Override
+    @Transactional
+    public Category updateCategoryById(Long categoryId, Category category) {
+        Category fetchedCategory = this.getCategoryById(categoryId);
+        fetchedCategory.setType(category.getType());
+        return fetchedCategory;
+    }
 }

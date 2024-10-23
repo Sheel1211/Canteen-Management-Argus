@@ -32,6 +32,12 @@ public class CategoryController {
         return new ResponseEntity<>(categoryResponseDTO, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponseDTO> updateCategoryById(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO){
+        CategoryResponseDTO categoryResponseDTO = categoryTransformer.updateCategoryById(categoryId,categoryDTO);
+        return new ResponseEntity<>(categoryResponseDTO, HttpStatus.CREATED);
+    }
+
     @GetMapping("/canteen/{canteenId}")
     public ResponseEntity<List<CategoryResponseDTO>> getAllCategoriesByCanteenId(@PathVariable Long canteenId)
     {

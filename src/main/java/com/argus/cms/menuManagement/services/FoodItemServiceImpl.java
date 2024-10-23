@@ -50,10 +50,13 @@ public class FoodItemServiceImpl implements FoodItemService{
     public FoodItem updateFoodItem(Long foodItemId,FoodItem foodItemReq) {
 
         try{
-            FoodItem existingFoodItem  = this.getFoodItemById(foodItemId);
-            existingFoodItem.setPrice(foodItemReq.getPrice());
-            FoodItem updatedFoodItem= foodItemRepository.save(existingFoodItem);
-            return updatedFoodItem;
+            FoodItem foodItem  = this.getFoodItemById(foodItemId);
+            foodItem.setPrice(foodItemReq.getPrice());
+            foodItem.setName(foodItem.getName());
+            foodItem.setCategories(foodItem.getCategories());
+            foodItem.setDescription(foodItem.getDescription());
+            foodItem.setQuantity(foodItem.getQuantity());
+            return foodItem;
         }catch (OptimisticEntityLockException e) {
             throw new ConcurrentModificationException("Failed to update food item due to concurrent modification. Please try again.");
         }

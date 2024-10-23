@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private UserTransformer userTransformer;
     private UserService userService;
+
 
     @PostMapping("/login")
     public ResponseEntity<String> Login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
@@ -38,15 +41,18 @@ public class UserController {
         return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
-        UserResponseDTO userResponseDTO = userTransformer.findUserByIdTransformer(id);
+    @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #userId == principal.userId")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long userId) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(customUserDetails.getUserId());
+        UserResponseDTO userResponseDTO = userTransformer.findUserByIdTransformer(userId);
         return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUserById(@PathVariable Long id) {
-        userTransformer.deleteUserByIdTransformer(id);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Object> deleteUserById(@PathVariable Long userId) {
+        userTransformer.deleteUserByIdTransformer(userId);
         return new ResponseEntity<>("User Deleted Successfully",HttpStatus.OK);
     }
 

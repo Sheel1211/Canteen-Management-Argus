@@ -3,6 +3,6 @@ package com.argus.cms.canteenManagement.dto;
 import lombok.Data;
 
 @Data
-public class CanteenCreateDTO {
+public class CanteenRequestDTO {
     private String name;
 }

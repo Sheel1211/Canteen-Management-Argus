@@ -1,6 +1,6 @@
 package com.argus.cms.canteenManagement.mappers;
 
-import com.argus.cms.canteenManagement.dto.CanteenCreateDTO;
+import com.argus.cms.canteenManagement.dto.CanteenRequestDTO;
 import com.argus.cms.canteenManagement.dto.CanteenResponseDTO;
 import com.argus.cms.canteenManagement.entities.Canteen;
 import org.mapstruct.Mapper;
@@ -11,13 +11,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CanteenMapper {
 
-    CanteenCreateDTO canteenToCanteenDTO(Canteen canteen);
 
     @Mapping(target = "active", ignore = true)
-    Canteen canteenDTOToCanteen(CanteenCreateDTO canteenCreateDTO);
+    Canteen toEntity(CanteenRequestDTO canteenRequestDTO);
 
-    CanteenResponseDTO canteenToCanteenResponseDTO(Canteen canteen);
+    CanteenResponseDTO toResponseDTO(Canteen canteen);
 
-    List<CanteenResponseDTO> canteenListToCanteenResponseDTOList(List<Canteen> canteens);
+    List<CanteenResponseDTO> toResponseDTOList(List<Canteen> canteens);
 }
 

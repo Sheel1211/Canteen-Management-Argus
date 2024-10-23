@@ -21,5 +21,4 @@ public class Canteen extends AuditEntity {
 
     @OneToOne(mappedBy = "canteen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CanteenUser canteenUser;
-
 }

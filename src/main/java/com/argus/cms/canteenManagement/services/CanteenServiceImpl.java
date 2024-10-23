@@ -42,4 +42,20 @@ public class CanteenServiceImpl implements CanteenService {
         }
         canteen.setIsDeleted(true);
     }
+
+    @Override
+    @Transactional
+    public Canteen updateCanteenStatusById(Long canteenId) {
+        Canteen fetchedCanteen =this.getCanteenById(canteenId);
+        fetchedCanteen.setActive(!fetchedCanteen.isActive());
+        return fetchedCanteen;
+    }
+
+    @Override
+    @Transactional
+    public Canteen updateCanteenNameById(Long canteenId, Canteen canteen) {
+        Canteen fetchedCanteen = this.getCanteenById(canteenId);
+        fetchedCanteen.setName(canteen.getName());
+        return fetchedCanteen;
+    }
 }

@@ -9,4 +9,5 @@ public interface CategoryService {
     public Category getCategoryById(Long categoryId);
     public List<Category> findAllCategoriesByCanteenId(Long canteenId);
     public void deleteCategoryById(Long categoryId);
+    public Category updateCategoryById(Long categoryId,Category category);
 }
