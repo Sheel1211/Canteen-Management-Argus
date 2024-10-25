@@ -1,5 +1,6 @@
 package com.argus.cms.menuManagement.transformers;
 
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.MenuRequestDTO;
 import com.argus.cms.menuManagement.dtos.MenuResponseDTO;
 import com.argus.cms.menuManagement.entities.Menu;
@@ -23,7 +24,7 @@ public class MenuTransformer {
     }
 
 //
-    public MenuResponseDTO getMenuById(Long menuId) {
+    public MenuResponseDTO getMenuById(Long menuId) throws RecordNotFoundException {
         return menuMapper.toResponseDTO(menuService.getMenuById(menuId));
     }
 
@@ -31,7 +32,7 @@ public class MenuTransformer {
         return menuMapper.toResponseDTOs(menuService.getAllMenus());
     }
 
-    public void deleteMenuById(Long menuId) {
+    public void deleteMenuById(Long menuId) throws RecordNotFoundException {
         menuService.deleteMenuById(menuId);
     }
 }

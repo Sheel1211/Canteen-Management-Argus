@@ -1,5 +1,6 @@
 package com.argus.cms.menuManagement.controllers;
 
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.MenuRequestDTO;
 import com.argus.cms.menuManagement.dtos.MenuResponseDTO;
 import com.argus.cms.menuManagement.transformers.MenuTransformer;
@@ -24,7 +25,7 @@ public class MenuController {
     }
 
     @GetMapping("/{menuId}")
-    public ResponseEntity<MenuResponseDTO> getMenuById(@PathVariable Long menuId) {
+    public ResponseEntity<MenuResponseDTO> getMenuById(@PathVariable Long menuId) throws RecordNotFoundException {
         MenuResponseDTO menuResponseDTO = menuTransformer.getMenuById(menuId);
         return new ResponseEntity<>(menuResponseDTO, HttpStatus.OK);
     }
@@ -37,7 +38,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{menuId}")
-    public ResponseEntity<String> deleteMenuById(@PathVariable Long menuId) {
+    public ResponseEntity<String> deleteMenuById(@PathVariable Long menuId) throws RecordNotFoundException {
         menuTransformer.deleteMenuById(menuId);
         return new ResponseEntity<>("Menu deleted successfully!", HttpStatus.OK);
     }

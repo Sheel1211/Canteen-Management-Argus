@@ -2,6 +2,7 @@ package com.argus.cms.menuManagement.mappers;
 
 import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.canteenManagement.services.CanteenService;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.CategoryDTO;
 import com.argus.cms.menuManagement.dtos.CategoryResponseDTO;
 import com.argus.cms.menuManagement.entities.Category;
@@ -29,7 +30,7 @@ public abstract class CategoryMapper {
     public abstract List<CategoryResponseDTO> toResponseListDTO(List<Category> category);
 
     @Named("mapCanteenIdToCanteen")
-    public Canteen map(Long canteenId) {
+    public Canteen map(Long canteenId) throws RecordNotFoundException {
         return canteenId != null ? canteenService.getCanteenById(canteenId) : null;
     }
 

@@ -1,5 +1,6 @@
 package com.argus.cms.menuManagement.controllers;
 
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
 import com.argus.cms.menuManagement.dtos.GetAllFoodItemResponseDTO;
@@ -25,19 +26,19 @@ public class FoodItemController {
     }
 
     @GetMapping("/{foodItemId}")
-    public ResponseEntity<FoodItemResponseDTO> getFoodItemById(@PathVariable Long foodItemId) {
+    public ResponseEntity<FoodItemResponseDTO> getFoodItemById(@PathVariable Long foodItemId) throws RecordNotFoundException {
         FoodItemResponseDTO foodItem = foodItemTransformer.getFoodItemById(foodItemId);
         return new ResponseEntity<>(foodItem, HttpStatus.OK);
     }
 
     @PutMapping("/{foodItemId}")
-    public ResponseEntity<FoodItemResponseDTO> updateFoodItem(@PathVariable Long foodItemId, @RequestBody FoodItemDTO foodItemReqDTO) {
+    public ResponseEntity<FoodItemResponseDTO> updateFoodItem(@PathVariable Long foodItemId, @RequestBody FoodItemDTO foodItemReqDTO) throws RecordNotFoundException{
         FoodItemResponseDTO foodItem = foodItemTransformer.updateFoodItem(foodItemId,foodItemReqDTO);
         return new ResponseEntity<>(foodItem, HttpStatus.OK);
     }
 
     @DeleteMapping("/{foodItemId}")
-    public ResponseEntity<String> deleteFoodItemById(@PathVariable Long foodItemId) {
+    public ResponseEntity<String> deleteFoodItemById(@PathVariable Long foodItemId) throws RecordNotFoundException {
         foodItemTransformer.deleteFoodItemById(foodItemId);
         return new ResponseEntity<>("FoodItem with id: ", HttpStatus.OK);
     }

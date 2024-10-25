@@ -1,5 +1,6 @@
 package com.argus.cms.userManagement.users.mappers;
 
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.roles.entities.Roles;
 import com.argus.cms.userManagement.roles.services.RoleService;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
@@ -33,7 +34,7 @@ public abstract class UserMapper {
     }
 
     @Named("mapRoleNamesToRoles")
-    public Set<Roles> mapRoleNamesToRoles(Set<String> roleNames) {
+    public Set<Roles> mapRoleNamesToRoles(Set<String> roleNames) throws RecordNotFoundException {
         Set<Roles> roles = new HashSet<>();
         for (String roleName : roleNames) {
             Roles role = roleService.findByName(roleName);

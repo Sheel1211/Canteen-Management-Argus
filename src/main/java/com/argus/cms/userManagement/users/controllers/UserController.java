@@ -1,6 +1,7 @@
 package com.argus.cms.userManagement.users.controllers;
 
 import com.argus.cms.config.CustomUserDetails;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.users.dto.LoginRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
@@ -28,14 +29,14 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> Login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
+    public ResponseEntity<String> Login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) throws RecordNotFoundException {
         String token = userTransformer.loginUser(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         return new ResponseEntity<>("User logged In Successfully",HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) {
+    public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) throws RecordNotFoundException {
         System.out.println(registrationRequestDTO);
         RegistrationResponseDTO registrationResponseDTO = userTransformer.registrationTransformer(registrationRequestDTO);
         return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
@@ -43,7 +44,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #userId == principal.userId")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long userId) throws RecordNotFoundException {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println(customUserDetails.getUserId());
         UserResponseDTO userResponseDTO = userTransformer.findUserByIdTransformer(userId);
@@ -51,13 +52,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Object> deleteUserById(@PathVariable Long userId) {
+    public ResponseEntity<Object> deleteUserById(@PathVariable Long userId) throws RecordNotFoundException {
         userTransformer.deleteUserByIdTransformer(userId);
         return new ResponseEntity<>("User Deleted Successfully",HttpStatus.OK);
     }
 
     @GetMapping("/userName")
-    public ResponseEntity<UserResponseDTO> getUserByUserName(@RequestParam String userName) {
+    public ResponseEntity<UserResponseDTO> getUserByUserName(@RequestParam String userName) throws RecordNotFoundException {
         UserResponseDTO userResponseDTO = userTransformer.findUserByUserNameTransformer(userName);
         return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
     }

@@ -1,6 +1,6 @@
 package com.argus.cms.menuManagement.services;
 
-import com.argus.cms.exceptions.EntityNotFoundException;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.entities.Menu;
 import com.argus.cms.menuManagement.repositories.MenuRepository;
 import lombok.AllArgsConstructor;
@@ -23,8 +23,8 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     @Transactional(readOnly = true)
-    public Menu getMenuById(Long menuId) {
-        return menuRepository.findById(menuId).orElseThrow(()-> new EntityNotFoundException("Menu not found with the Id : "+ menuId));
+    public Menu getMenuById(Long menuId) throws RecordNotFoundException {
+        return menuRepository.findById(menuId).orElseThrow(()-> new RecordNotFoundException("Menu not found with the Id : "+ menuId));
     }
 
     @Override
@@ -35,11 +35,11 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     @Transactional
-    public void deleteMenuById(Long menuId) {
+    public void deleteMenuById(Long menuId) throws RecordNotFoundException {
 
         Menu menu = this.getMenuById(menuId);
         if(menu.getIsDeleted()){
-            throw new EntityNotFoundException("Menu doesn't exist with id " + menuId);
+            throw new RecordNotFoundException("Menu doesn't exist with id " + menuId);
         }
         menu.setIsDeleted(true);
         menuRepository.save(menu);

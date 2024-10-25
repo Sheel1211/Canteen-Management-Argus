@@ -2,6 +2,7 @@ package com.argus.cms.menuManagement.mappers;
 
 import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.canteenManagement.services.CanteenService;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.MenuRequestDTO;
 import com.argus.cms.menuManagement.dtos.MenuResponseDTO;
 import com.argus.cms.menuManagement.entities.Category;
@@ -14,6 +15,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,8 +42,13 @@ public abstract class MenuMapper {
 
     public abstract List<MenuResponseDTO> toResponseDTOs(List<Menu> menus);
 
-    List<FoodItem> map(List<Long> foodItems){
-        return foodItems.stream().map((id)->foodItemService.getFoodItemById(id)).collect(Collectors.toList());
+    List<FoodItem> map(List<Long> foodItems) throws RecordNotFoundException{
+        List<FoodItem> foodItemList = new ArrayList<>();
+        for (Long id : foodItems) {
+            foodItemList.add(foodItemService.getFoodItemById(id));
+        }
+//        return foodItems.stream().map((id)->foodItemService.getFoodItemById(id)).collect(Collectors.toList());
+        return foodItemList;
     }
 
     String map(Canteen canteen){
@@ -49,13 +56,12 @@ public abstract class MenuMapper {
     }
 
     @Named("mapCanteenIdToCanteen")
-    public Canteen mapCanteenIdToCanteen(Long canteenId)
-    {
+    public Canteen mapCanteenIdToCanteen(Long canteenId) throws RecordNotFoundException {
         return canteenService.getCanteenById(canteenId);
     }
 
     @Named("mapCategoryIdToCategory")
-    public Category mapCategoryIdToCategory(Long categoryId)
+    public Category mapCategoryIdToCategory(Long categoryId) throws RecordNotFoundException
     {
         return categoryService.getCategoryById(categoryId);
     }

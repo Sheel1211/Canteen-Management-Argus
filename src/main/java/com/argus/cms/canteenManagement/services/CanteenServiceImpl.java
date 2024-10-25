@@ -2,7 +2,7 @@ package com.argus.cms.canteenManagement.services;
 
 import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.canteenManagement.repositories.CanteenRepository;
-import com.argus.cms.exceptions.EntityNotFoundException;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,31 +29,31 @@ public class CanteenServiceImpl implements CanteenService {
 
     @Override
     @Transactional(readOnly = true)
-    public Canteen getCanteenById(Long id) {
-        return canteenRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Canteen not found"));
+    public Canteen getCanteenById(Long id) throws RecordNotFoundException {
+        return canteenRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Canteen not found"));
     }
 
     @Override
     @Transactional
-    public void deleteCanteenById(Long canteenId) {
+    public void deleteCanteenById(Long canteenId) throws RecordNotFoundException {
         Canteen canteen = this.getCanteenById(canteenId);
         if(canteen.getIsDeleted()){
-            throw new EntityNotFoundException("Canteen doesn't exist with id " + canteenId);
+            throw new RecordNotFoundException("Canteen doesn't exist with id " + canteenId);
         }
         canteen.setIsDeleted(true);
     }
 
     @Override
     @Transactional
-    public Canteen updateCanteenStatusById(Long canteenId) {
-        Canteen fetchedCanteen =this.getCanteenById(canteenId);
+    public Canteen updateCanteenStatusById(Long canteenId) throws RecordNotFoundException {
+        Canteen fetchedCanteen = this.getCanteenById(canteenId);
         fetchedCanteen.setActive(!fetchedCanteen.isActive());
         return fetchedCanteen;
     }
 
     @Override
     @Transactional
-    public Canteen updateCanteenNameById(Long canteenId, Canteen canteen) {
+    public Canteen updateCanteenNameById(Long canteenId, Canteen canteen) throws RecordNotFoundException {
         Canteen fetchedCanteen = this.getCanteenById(canteenId);
         fetchedCanteen.setName(canteen.getName());
         return fetchedCanteen;

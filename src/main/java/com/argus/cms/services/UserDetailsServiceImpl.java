@@ -1,7 +1,7 @@
 package com.argus.cms.services;
 
 import com.argus.cms.config.CustomUserDetails;
-import com.argus.cms.exceptions.EntityNotFoundException;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.users.entities.Users;
 import com.argus.cms.userManagement.users.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -24,12 +24,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
 
-        Users user = userRepository.findByUserName(username).orElseThrow(() -> new EntityNotFoundException("User with username " + username + " not found."));;
+        Users user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("Record not found with userId"));
+
         List<GrantedAuthority> authorities = user.getRoles().stream().map(authority -> new
                 SimpleGrantedAuthority(authority.getName())).collect(Collectors.toList());
 
-        return new CustomUserDetails(user.getId(),user.getUserName(), user.getPassword(), authorities);
+        return new CustomUserDetails(user.getId(), user.getUserName(), user.getPassword(), authorities);
     }
 }

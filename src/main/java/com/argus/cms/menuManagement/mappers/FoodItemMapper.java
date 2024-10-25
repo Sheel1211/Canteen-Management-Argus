@@ -2,6 +2,7 @@ package com.argus.cms.menuManagement.mappers;
 
 import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.canteenManagement.services.CanteenService;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
 import com.argus.cms.menuManagement.dtos.GetAllFoodItemResponseDTO;
@@ -38,7 +39,7 @@ public abstract class FoodItemMapper {
     public abstract List<GetAllFoodItemResponseDTO> toGetAllResponseDTO(List<FoodItem> foodItems);
 
     @Named("mapCanteenIdToCanteen")
-    public Canteen mapCanteen(Long canteenId) {
+    public Canteen mapCanteen(Long canteenId) throws RecordNotFoundException {
         if (canteenId == null) {
             return null;
         }
@@ -46,14 +47,17 @@ public abstract class FoodItemMapper {
     }
 
     @Named("mapCategoryIdsToCategories")
-    public List<Category> mapCategoryIdsToCategories(List<Long> categoryIds) {
+    public List<Category> mapCategoryIdsToCategories (List<Long> categoryIds) throws RecordNotFoundException {
         if (categoryIds.isEmpty()) {
             return new ArrayList<>();
         }
         List<Category> categories = new ArrayList<>();
-        categoryIds.forEach((categoryId) -> {
+//        categoryIds.forEach((categoryId) -> {
+//            categories.add(categoryService.getCategoryById(categoryId));
+//        });
+        for (Long categoryId : categoryIds) {
             categories.add(categoryService.getCategoryById(categoryId));
-        });
+        }
         return categories;
     }
 

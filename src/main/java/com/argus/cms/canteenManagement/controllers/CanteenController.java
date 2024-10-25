@@ -3,6 +3,7 @@ package com.argus.cms.canteenManagement.controllers;
 import com.argus.cms.canteenManagement.dto.CanteenRequestDTO;
 import com.argus.cms.canteenManagement.dto.CanteenResponseDTO;
 import com.argus.cms.canteenManagement.transformers.CanteenTransformer;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,19 +31,19 @@ public class CanteenController {
     }
 
     @PutMapping("/status/{canteenId}")
-    public ResponseEntity<CanteenResponseDTO> updateCanteenStatusById(@PathVariable Long canteenId) {
+    public ResponseEntity<CanteenResponseDTO> updateCanteenStatusById(@PathVariable Long canteenId) throws RecordNotFoundException {
         CanteenResponseDTO updatedCanteen = canteenTransformer.updateCanteenStatusById(canteenId);
         return new ResponseEntity<>(updatedCanteen,HttpStatus.OK);
     }
 
     @PutMapping("/{canteenId}")
-    public ResponseEntity<CanteenResponseDTO> updateCanteenNameById(@PathVariable Long canteenId,@RequestBody CanteenRequestDTO canteenRequestDTO) {
+    public ResponseEntity<CanteenResponseDTO> updateCanteenNameById(@PathVariable Long canteenId,@RequestBody CanteenRequestDTO canteenRequestDTO) throws RecordNotFoundException {
         CanteenResponseDTO updatedCanteen = canteenTransformer.updateCanteenNameById(canteenId,canteenRequestDTO);
         return new ResponseEntity<>(updatedCanteen,HttpStatus.OK);
     }
 
     @DeleteMapping("/{canteenId}")
-    public ResponseEntity<Object> deleteCanteenById(@PathVariable Long canteenId){
+    public ResponseEntity<Object> deleteCanteenById(@PathVariable Long canteenId)throws RecordNotFoundException {
         canteenTransformer.deleteCanteenById(canteenId);
         return new ResponseEntity<>("Canteen Deleted Successfully!",HttpStatus.OK);
     }

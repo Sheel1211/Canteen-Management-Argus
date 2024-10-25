@@ -1,7 +1,7 @@
 package com.argus.cms.advice;
 
 import com.argus.cms.dto.ErrorResponseDTO;
-import com.argus.cms.exceptions.EntityNotFoundException;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -76,8 +76,8 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(EntityNotFoundException ex) {
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(RecordNotFoundException ex) {
         logger.error("User not found: {}", ex.getMessage(), ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }

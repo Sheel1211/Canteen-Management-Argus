@@ -1,5 +1,6 @@
 package com.argus.cms.userManagement.users.transformers;
 
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
 import com.argus.cms.userManagement.users.dto.UserResponseDTO;
@@ -16,11 +17,11 @@ public class UserTransformer {
     private UserMapper userMapper;
     private UserService userService;
 
-    public String loginUser(String userName, String password){
+    public String loginUser(String userName, String password) throws RecordNotFoundException {
         return userService.loginUser(userName,password);
     }
 
-    public RegistrationResponseDTO registrationTransformer(RegistrationRequestDTO registrationRequestDTO) {
+    public RegistrationResponseDTO registrationTransformer(RegistrationRequestDTO registrationRequestDTO) throws RecordNotFoundException {
         Users user = userMapper.registrationRequestDTOToUser(registrationRequestDTO);
         Users createdUser = userService.saveUser(user);
         return userMapper.userToRegistrationResponseDTO(createdUser);
@@ -30,16 +31,16 @@ public class UserTransformer {
         return userMapper.userToRegistrationResponseDTO(user);
     }
 
-    public UserResponseDTO findUserByIdTransformer(Long userId) {
+    public UserResponseDTO findUserByIdTransformer(Long userId) throws RecordNotFoundException {
         Users user = userService.findUserById(userId);
         return userMapper.userToUserResponseDTO(user);
     }
 
-    public void deleteUserByIdTransformer(Long userId) {
+    public void deleteUserByIdTransformer(Long userId) throws RecordNotFoundException {
         userService.deleteUserById(userId);
     }
 
-    public UserResponseDTO findUserByUserNameTransformer(String userName) {
+    public UserResponseDTO findUserByUserNameTransformer(String userName) throws RecordNotFoundException {
         Users user = userService.findByUserName(userName);
         return userMapper.userToUserResponseDTO(user);
     }

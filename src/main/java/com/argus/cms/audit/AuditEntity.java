@@ -1,8 +1,7 @@
 package com.argus.cms.audit;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
+import com.argus.cms.userManagement.users.entities.Users;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,16 +17,18 @@ import java.time.LocalDateTime;
 public abstract class AuditEntity {
 
     @CreatedBy
-    @Column(name = "created_by", updatable = false)
-    private String createdBy;
+    @ManyToOne
+    @JoinColumn(name = "created_by", updatable = false)
+    private Users createdBy;
 
     @Column(name = "created_at", updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_by")
     @LastModifiedBy
-    private String updatedBy;
+    @ManyToOne
+    @JoinColumn(name = "updated_by", updatable = false) // Recommended to control column name
+    private Users updatedBy;
 
     @Column(name = "updated_at")
     @LastModifiedDate

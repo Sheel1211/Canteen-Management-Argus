@@ -1,5 +1,6 @@
 package com.argus.cms.userManagement.roles.controllers;
 
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.roles.dto.RoleDTO;
 import com.argus.cms.userManagement.roles.transformers.RoleTransformer;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RoleDTO> getRoleByID(@PathVariable Long roleId) {
+    public ResponseEntity<RoleDTO> getRoleByID(@PathVariable Long roleId) throws RecordNotFoundException {
         RoleDTO roleDTO = roleTransformer.getRoleById(roleId);
         return new ResponseEntity<>(roleDTO, HttpStatus.OK);
     }
@@ -33,9 +34,9 @@ public class RoleController {
         return new ResponseEntity<>(rolesDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Object> deleteRoleById(@PathVariable Long roleId){
-        roleTransformer.deleteRoleById(roleId);
-        return new ResponseEntity<>("Role Deleted Successfully !",HttpStatus.OK);
-    }
+//    @DeleteMapping
+//    public ResponseEntity<Object> deleteRoleById(@PathVariable Long roleId) throws RecordNotFoundException {
+//        roleTransformer.deleteRoleById(roleId);
+//        return new ResponseEntity<>("Role Deleted Successfully !",HttpStatus.OK);
+//    }
 }

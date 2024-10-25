@@ -1,7 +1,7 @@
 package com.argus.cms.menuManagement.services;
 
 import com.argus.cms.exceptions.ConcurrentModificationException;
-import com.argus.cms.exceptions.EntityNotFoundException;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.entities.FoodItem;
 import com.argus.cms.menuManagement.repositories.FoodItemRepository;
 import lombok.AllArgsConstructor;
@@ -25,8 +25,8 @@ public class FoodItemServiceImpl implements FoodItemService{
 
     @Override
     @Transactional(readOnly = true)
-    public FoodItem getFoodItemById(Long foodItemId) {
-        return foodItemRepository.findById(foodItemId).orElseThrow(()-> new EntityNotFoundException("Food Item Not Found With Id " + foodItemId));
+    public FoodItem getFoodItemById(Long foodItemId) throws RecordNotFoundException {
+        return foodItemRepository.findById(foodItemId).orElseThrow(()-> new RecordNotFoundException("Food Item Not Found With Id " + foodItemId));
     }
 
     @Override
@@ -37,17 +37,17 @@ public class FoodItemServiceImpl implements FoodItemService{
 
     @Override
     @Transactional
-    public void deleteFoodItemById(Long foodItemId) {
+    public void deleteFoodItemById(Long foodItemId) throws RecordNotFoundException {
         FoodItem foodItem = this.getFoodItemById(foodItemId);
         if(foodItem.getIsDeleted()){
-            throw new EntityNotFoundException("Food Item doesn't exist with id " + foodItemId);
+            throw new RecordNotFoundException("Food Item doesn't exist with id " + foodItemId);
         }
         foodItem.setIsDeleted(true);
     }
 
     @Override
     @Transactional
-    public FoodItem updateFoodItem(Long foodItemId,FoodItem foodItemReq) {
+    public FoodItem updateFoodItem(Long foodItemId,FoodItem foodItemReq) throws RecordNotFoundException,OptimisticEntityLockException{
 
         try{
             FoodItem foodItem  = this.getFoodItemById(foodItemId);

@@ -1,6 +1,6 @@
 package com.argus.cms.userManagement.roles.services;
 
-import com.argus.cms.exceptions.EntityNotFoundException;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.roles.entities.Roles;
 import com.argus.cms.userManagement.roles.repositories.RoleRepository;
 import lombok.AllArgsConstructor;
@@ -31,25 +31,25 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(readOnly = true)
-    public Roles findByName(String roleName) {
-        Roles role = roleRepository.findByName(roleName).orElseThrow(() -> new EntityNotFoundException("Role with name " + roleName + " not found!"));
+    public Roles findByName(String roleName) throws RecordNotFoundException {
+        Roles role = roleRepository.findByName(roleName).orElseThrow(() -> new RecordNotFoundException("Role with name " + roleName + " not found!"));
         return role;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Roles findById(Long roleId) {
-        Roles role = roleRepository.findById(roleId).orElseThrow(() -> new EntityNotFoundException("Role with name " + roleId + " not found!"));
+    public Roles findById(Long roleId) throws RecordNotFoundException {
+        Roles role = roleRepository.findById(roleId).orElseThrow(() -> new RecordNotFoundException("Role with name " + roleId + " not found!"));
         return role;
     }
 
-    @Override
-    @Transactional
-    public void deleteById(Long roleId) {
-        Roles role = this.findById(roleId);
-//        if(role.getIsDeleted()){
-//            throw new EntityNotFoundException("Role doesn't exist with id " + roleId);
-//        }
-//        role.setIsDeleted(true);
-    }
+//    @Override
+//    @Transactional
+//    public void deleteById(Long roleId) throws RecordNotFoundException {
+//        Roles role = this.findById(roleId);
+////        if(role.getIsDeleted()){
+////            throw new EntityNotFoundException("Role doesn't exist with id " + roleId);
+////        }
+////        role.setIsDeleted(true);
+//    }
 }

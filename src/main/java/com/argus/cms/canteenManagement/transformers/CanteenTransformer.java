@@ -5,6 +5,7 @@ import com.argus.cms.canteenManagement.dto.CanteenResponseDTO;
 import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.canteenManagement.mappers.CanteenMapper;
 import com.argus.cms.canteenManagement.services.CanteenService;
+import com.argus.cms.exceptions.RecordNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class CanteenTransformer {
 
     public CanteenResponseDTO createCanteen(CanteenRequestDTO canteenRequestDTO) {
         Canteen canteen = canteenMapper.toEntity(canteenRequestDTO);
-        System.out.println(canteenRequestDTO);
+//        System.out.println(canteenRequestDTO);
         canteen.setActive(false);
         Canteen createdCanteen = canteenService.saveCanteen(canteen);
         return canteenMapper.toResponseDTO(createdCanteen);
@@ -30,19 +31,19 @@ public class CanteenTransformer {
         return canteenMapper.toResponseDTOList(canteens);
     }
 
-    public void deleteCanteenById(Long canteenId){
+    public void deleteCanteenById(Long canteenId) throws RecordNotFoundException {
         canteenService.deleteCanteenById(canteenId);
     }
 
-    public CanteenResponseDTO updateCanteenStatusById(Long canteenId) {
+    public CanteenResponseDTO updateCanteenStatusById(Long canteenId) throws RecordNotFoundException {
         Canteen canteen = canteenService.updateCanteenStatusById(canteenId);
         return canteenMapper.toResponseDTO(canteen);
     }
 
-    public CanteenResponseDTO updateCanteenNameById(Long canteenId,CanteenRequestDTO canteenRequestDTO) {
+    public CanteenResponseDTO updateCanteenNameById(Long canteenId,CanteenRequestDTO canteenRequestDTO) throws RecordNotFoundException {
         Canteen canteen = canteenMapper.toEntity(canteenRequestDTO);
         Canteen updatedCanteen = canteenService.updateCanteenNameById(canteenId,canteen);
-        return canteenMapper.toResponseDTO(canteen);
+        return canteenMapper.toResponseDTO(updatedCanteen);
     }
 
 

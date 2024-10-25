@@ -1,5 +1,6 @@
 package com.argus.cms.userManagement.roles.transformers;
 
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.roles.dto.RoleDTO;
 import com.argus.cms.userManagement.roles.entities.Roles;
 import com.argus.cms.userManagement.roles.mappers.RoleMapper;
@@ -21,7 +22,7 @@ public class RoleTransformer {
         return roleMapper.roleToRoleDTO(addedRole);
     }
 
-    public RoleDTO getRoleById(Long roleId){
+    public RoleDTO getRoleById(Long roleId) throws RecordNotFoundException {
         Roles role = roleService.findById(roleId);
         return roleMapper.roleToRoleDTO(role);
     }
@@ -31,7 +32,7 @@ public class RoleTransformer {
         return roleMapper.getRoleDTOListFromRoleList(roles);
     }
 
-    public void deleteRoleById(Long roleId){
-        roleService.deleteById(roleId);
-    }
+//    public void deleteRoleById(Long roleId) throws RecordNotFoundException {
+//        roleService.deleteById(roleId);
+//    }
 }

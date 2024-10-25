@@ -1,5 +1,6 @@
 package com.argus.cms.menuManagement.controllers;
 
+import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.CategoryDTO;
 import com.argus.cms.menuManagement.dtos.CategoryResponseDTO;
 import com.argus.cms.menuManagement.services.CategoryService;
@@ -27,26 +28,26 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryResponseDTO> getCategoryById(@PathVariable Long categoryId){
+    public ResponseEntity<CategoryResponseDTO> getCategoryById(@PathVariable Long categoryId) throws RecordNotFoundException {
         CategoryResponseDTO categoryResponseDTO = categoryTransformer.getCategoryById(categoryId);
         return new ResponseEntity<>(categoryResponseDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<CategoryResponseDTO> updateCategoryById(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<CategoryResponseDTO> updateCategoryById(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) throws RecordNotFoundException {
         CategoryResponseDTO categoryResponseDTO = categoryTransformer.updateCategoryById(categoryId,categoryDTO);
         return new ResponseEntity<>(categoryResponseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/canteen/{canteenId}")
-    public ResponseEntity<List<CategoryResponseDTO>> getAllCategoriesByCanteenId(@PathVariable Long canteenId)
+    public ResponseEntity<List<CategoryResponseDTO>> getAllCategoriesByCanteenId(@PathVariable Long canteenId) throws RecordNotFoundException
     {
         List<CategoryResponseDTO>  categoryResponseDTOs = categoryTransformer.getAllCategoriesByCanteenId(canteenId);
         return new ResponseEntity<>(categoryResponseDTOs,HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<String> deleteCategoryById(@PathVariable Long categoryId)
+    public ResponseEntity<String> deleteCategoryById(@PathVariable Long categoryId) throws RecordNotFoundException
     {
         categoryService.deleteCategoryById(categoryId);
         return new ResponseEntity<>("Deleted successfully",HttpStatus.OK);
