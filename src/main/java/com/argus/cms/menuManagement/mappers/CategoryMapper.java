@@ -21,8 +21,8 @@ public abstract class CategoryMapper {
     @Mapping(target = "canteen", source = "canteenId", qualifiedByName = "mapCanteenIdToCanteen")
     public abstract Category toEntity(CategoryDTO categoryDTO);
 
-    @Mapping(target = "canteen.createdBy", source = "canteen.createdBy")
-    @Mapping(target = "canteen.createdAt", source = "canteen.createdAt")
+//    @Mapping(target = "canteen.createdBy", source = "canteen.createdBy")
+//    @Mapping(target = "canteen.createdAt", source = "canteen.createdAt")
     public abstract CategoryResponseDTO toResponseDTO(Category category);
 
     @Mapping(target = "canteen.createdBy", source = "canteen.createdBy")

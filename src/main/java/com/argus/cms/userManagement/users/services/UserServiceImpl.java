@@ -45,10 +45,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Users saveUser(Users user) throws RecordNotFoundException{
-//        Users toSaveUser = this.findByUserName(user.getUserName());
-//        if (toSaveUser != null) {
-//            throw new DataIntegrityViolationException("Username Already Exists! Please choose a different username.");
-//        }
+        Users toSaveUser = userRepository.findByUserName(user.getUserName()).orElse(null);
+        if (toSaveUser != null) {
+            throw new DataIntegrityViolationException("Username Already Exists! Please choose a different username.");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

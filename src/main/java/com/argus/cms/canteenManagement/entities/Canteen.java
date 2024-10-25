@@ -1,12 +1,19 @@
 package com.argus.cms.canteenManagement.entities;
 
 import com.argus.cms.audit.AuditEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_canteen")
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class Canteen extends AuditEntity {
 
     @Id
@@ -19,6 +26,8 @@ public class Canteen extends AuditEntity {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
-    @OneToOne(mappedBy = "canteen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private CanteenUser canteenUser;
+//    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CanteenManager> canteenManagers;
 }

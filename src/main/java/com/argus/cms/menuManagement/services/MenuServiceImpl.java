@@ -21,6 +21,7 @@ public class MenuServiceImpl implements MenuService{
         return menuRepository.save(menu);
     }
 
+    //one canteen
     @Override
     @Transactional(readOnly = true)
     public Menu getMenuById(Long menuId) throws RecordNotFoundException {

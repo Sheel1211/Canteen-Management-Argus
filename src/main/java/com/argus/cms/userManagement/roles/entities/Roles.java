@@ -2,6 +2,7 @@ package com.argus.cms.userManagement.roles.entities;
 
 import com.argus.cms.audit.AuditEntity;
 import com.argus.cms.userManagement.users.entities.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,5 +36,6 @@ public class Roles {
     private LocalDateTime createdAt;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     private Set<Users> users = new HashSet<>();
 }

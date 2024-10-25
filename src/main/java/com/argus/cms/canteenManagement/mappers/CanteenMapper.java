@@ -9,9 +9,7 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface
-CanteenMapper {
-
+public interface CanteenMapper {
 
     @Mapping(target = "active", ignore = true)
     Canteen toEntity(CanteenRequestDTO canteenRequestDTO);

@@ -7,6 +7,7 @@ import com.argus.cms.menuManagement.transformers.MenuTransformer;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class MenuController {
     private final MenuTransformer menuTransformer;
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
     public ResponseEntity<MenuResponseDTO> addMenu(@RequestBody MenuRequestDTO menuRequestDTO) {
         MenuResponseDTO savedMenu = menuTransformer.addMenu(menuRequestDTO);
         return new ResponseEntity<>(savedMenu, HttpStatus.CREATED);
@@ -38,6 +40,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{menuId}")
+    @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
     public ResponseEntity<String> deleteMenuById(@PathVariable Long menuId) throws RecordNotFoundException {
         menuTransformer.deleteMenuById(menuId);
         return new ResponseEntity<>("Menu deleted successfully!", HttpStatus.OK);

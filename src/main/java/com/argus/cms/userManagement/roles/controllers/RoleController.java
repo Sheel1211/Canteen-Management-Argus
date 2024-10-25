@@ -16,11 +16,11 @@ import java.util.List;
 public class RoleController {
     private RoleTransformer roleTransformer;
 
-    @PostMapping
-    public ResponseEntity<RoleDTO> addRole(@RequestBody RoleDTO roleDTO) {
-        RoleDTO savedRoleDTO = roleTransformer.addRole(roleDTO);
-        return new ResponseEntity<>(savedRoleDTO, HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<RoleDTO> addRole(@RequestBody RoleDTO roleDTO) {
+//        RoleDTO savedRoleDTO = roleTransformer.addRole(roleDTO);
+//        return new ResponseEntity<>(savedRoleDTO, HttpStatus.CREATED);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<RoleDTO> getRoleByID(@PathVariable Long roleId) throws RecordNotFoundException {

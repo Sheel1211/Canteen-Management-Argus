@@ -1,17 +1,19 @@
 package com.argus.cms.menuManagement.entities;
 
-import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.audit.AuditEntity;
+import com.argus.cms.canteenManagement.entities.Canteen;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "tbl_category")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class Category extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

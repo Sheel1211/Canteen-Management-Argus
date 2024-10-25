@@ -4,11 +4,11 @@ import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
 import com.argus.cms.menuManagement.dtos.GetAllFoodItemResponseDTO;
-import com.argus.cms.menuManagement.entities.FoodItem;
 import com.argus.cms.menuManagement.transformers.FoodItemTransformer;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +20,7 @@ public class FoodItemController {
     private final FoodItemTransformer foodItemTransformer;
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
     public ResponseEntity<FoodItemResponseDTO> addFoodItem(@RequestBody FoodItemDTO foodItemDTO) {
         FoodItemResponseDTO savedFoodItem = foodItemTransformer.addFoodItem(foodItemDTO);
         return new ResponseEntity<>(savedFoodItem, HttpStatus.CREATED);
@@ -32,12 +33,14 @@ public class FoodItemController {
     }
 
     @PutMapping("/{foodItemId}")
+    @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
     public ResponseEntity<FoodItemResponseDTO> updateFoodItem(@PathVariable Long foodItemId, @RequestBody FoodItemDTO foodItemReqDTO) throws RecordNotFoundException{
         FoodItemResponseDTO foodItem = foodItemTransformer.updateFoodItem(foodItemId,foodItemReqDTO);
         return new ResponseEntity<>(foodItem, HttpStatus.OK);
     }
 
     @DeleteMapping("/{foodItemId}")
+    @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
     public ResponseEntity<String> deleteFoodItemById(@PathVariable Long foodItemId) throws RecordNotFoundException {
         foodItemTransformer.deleteFoodItemById(foodItemId);
         return new ResponseEntity<>("FoodItem with id: ", HttpStatus.OK);
@@ -49,26 +52,4 @@ public class FoodItemController {
         List<GetAllFoodItemResponseDTO> foodItems = foodItemTransformer.getAllFoodItems();
         return new ResponseEntity<>(foodItems, HttpStatus.OK);
     }
-
-    //get foddItems b canteenId
-
-    //get all foodItems available
-
-    //delete food item by a spicific canteen
-
-    //update food item by a spicific canteen
-
-
-//
-//    @GetMapping
-//    public ResponseEntity<List<FoodItemDTO>> getAllFoodItems() {
-//        List<FoodItemDTO> foodItems = foodItemTransformer.getAllFoodItems();
-//        return new ResponseEntity<>(foodItems, HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteFoodItem(@PathVariable Long id) {
-//        foodItemTransformer.deleteFoodItem(id);
-//        return new ResponseEntity<>("Food item deleted successfully!", HttpStatus.OK);
-//    }
 }

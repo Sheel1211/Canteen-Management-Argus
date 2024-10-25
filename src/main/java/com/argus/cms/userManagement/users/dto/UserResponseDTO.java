@@ -1,12 +1,16 @@
 package com.argus.cms.userManagement.users.dto;
 
 import com.argus.cms.userManagement.roles.entities.Roles;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserResponseDTO {
     private Long id;
     private String userName;

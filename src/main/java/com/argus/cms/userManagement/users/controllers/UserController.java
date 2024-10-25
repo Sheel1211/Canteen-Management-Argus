@@ -37,7 +37,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) throws RecordNotFoundException {
-        System.out.println(registrationRequestDTO);
+//        System.out.println(registrationRequestDTO);
         RegistrationResponseDTO registrationResponseDTO = userTransformer.registrationTransformer(registrationRequestDTO);
         return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
     }

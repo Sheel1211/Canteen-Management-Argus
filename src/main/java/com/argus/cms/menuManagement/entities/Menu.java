@@ -3,14 +3,18 @@ package com.argus.cms.menuManagement.entities;
 import com.argus.cms.audit.AuditEntity;
 import com.argus.cms.canteenManagement.entities.Canteen;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "tbl_menus")
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class Menu extends AuditEntity {
 
     @Id

@@ -1,11 +1,15 @@
 package com.argus.cms.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.util.Date;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class ErrorResponseDTO {
     private HttpStatus status;
     private String message;

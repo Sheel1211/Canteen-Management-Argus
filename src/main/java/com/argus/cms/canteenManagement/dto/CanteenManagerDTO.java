@@ -7,9 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CanteenResponseDTO {
-    private Long id;
-    private String name;
-    private boolean isActive;
-//    private List<String> canteenManagers;
+public class CanteenManagerDTO {
+    private Long canteenManagerId;
+    private Long canteenId;
 }
