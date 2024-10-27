@@ -1,7 +1,6 @@
-package com.argus.cms.services;
+package com.argus.cms.security.services;
 
-import com.argus.cms.config.CustomUserDetails;
-import com.argus.cms.exceptions.RecordNotFoundException;
+import com.argus.cms.security.CustomUserDetails;
 import com.argus.cms.userManagement.users.entities.Users;
 import com.argus.cms.userManagement.users.repositories.UserRepository;
 import lombok.AllArgsConstructor;

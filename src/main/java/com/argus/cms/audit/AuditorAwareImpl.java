@@ -1,6 +1,6 @@
 package com.argus.cms.audit;
 
-import com.argus.cms.config.CustomUserDetails;
+import com.argus.cms.security.CustomUserDetails;
 import com.argus.cms.userManagement.users.entities.Users;
 import com.argus.cms.userManagement.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,7 @@
 package com.argus.cms.menuManagement.controllers;
 
+import com.argus.cms.exceptions.ConcurrentModificationException;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
@@ -21,7 +23,7 @@ public class FoodItemController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
-    public ResponseEntity<FoodItemResponseDTO> addFoodItem(@RequestBody FoodItemDTO foodItemDTO) {
+    public ResponseEntity<FoodItemResponseDTO> addFoodItem(@RequestBody FoodItemDTO foodItemDTO) throws RecordNotFoundException, DataValidationErrorException {
         FoodItemResponseDTO savedFoodItem = foodItemTransformer.addFoodItem(foodItemDTO);
         return new ResponseEntity<>(savedFoodItem, HttpStatus.CREATED);
     }
@@ -34,7 +36,8 @@ public class FoodItemController {
 
     @PutMapping("/{foodItemId}")
     @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
-    public ResponseEntity<FoodItemResponseDTO> updateFoodItem(@PathVariable Long foodItemId, @RequestBody FoodItemDTO foodItemReqDTO) throws RecordNotFoundException{
+    public ResponseEntity<FoodItemResponseDTO> updateFoodItem(@PathVariable Long foodItemId, @RequestBody FoodItemDTO foodItemReqDTO) throws RecordNotFoundException, DataValidationErrorException, ConcurrentModificationException {
+
         FoodItemResponseDTO foodItem = foodItemTransformer.updateFoodItem(foodItemId,foodItemReqDTO);
         return new ResponseEntity<>(foodItem, HttpStatus.OK);
     }

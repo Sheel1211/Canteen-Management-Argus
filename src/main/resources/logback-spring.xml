@@ -33,7 +33,7 @@
     </root>
 
     <!-- LOG "com.argus.cms**" at TRACE level -->
-    <logger name="com.argus.cms.advice.DefaultExceptionHandler" level="ERROR" additivity="false">
+    <logger name="com.argus.cms.globalControllerAdvice.DefaultExceptionHandler" level="ERROR" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>

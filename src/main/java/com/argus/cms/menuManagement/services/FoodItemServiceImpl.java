@@ -1,9 +1,11 @@
 package com.argus.cms.menuManagement.services;
 
 import com.argus.cms.exceptions.ConcurrentModificationException;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.entities.FoodItem;
 import com.argus.cms.menuManagement.repositories.FoodItemRepository;
+import com.argus.cms.menuManagement.validation.FoodItemValidator;
 import lombok.AllArgsConstructor;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.stereotype.Service;
@@ -17,15 +19,18 @@ public class FoodItemServiceImpl implements FoodItemService{
 
     private final FoodItemRepository foodItemRepository;
 
+    private final FoodItemValidator foodItemValidator;
     @Override
     @Transactional
-    public FoodItem addFoodItem(FoodItem foodItem) {
+    public FoodItem addFoodItem(FoodItem foodItem) throws RecordNotFoundException, DataValidationErrorException {
+        foodItemValidator.validateCreateFoodItems(foodItem,this);
         return foodItemRepository.save(foodItem);
     }
 
     @Override
     @Transactional(readOnly = true)
     public FoodItem getFoodItemById(Long foodItemId) throws RecordNotFoundException {
+
         return foodItemRepository.findById(foodItemId).orElseThrow(()-> new RecordNotFoundException("Food Item Not Found With Id " + foodItemId));
     }
 
@@ -47,15 +52,20 @@ public class FoodItemServiceImpl implements FoodItemService{
 
     @Override
     @Transactional
-    public FoodItem updateFoodItem(Long foodItemId,FoodItem foodItemReq) throws RecordNotFoundException,OptimisticEntityLockException{
+    public FoodItem updateFoodItem(Long foodItemId,FoodItem foodItemReq) throws RecordNotFoundException, OptimisticEntityLockException, DataValidationErrorException, ConcurrentModificationException {
+
+
+//        FoodItem checkIfFoodItemExsists= this.getFoodItemById(foodItemId);
+
+        foodItemValidator.validateUpdateFoodItems(foodItemReq,this);
 
         try{
             FoodItem foodItem  = this.getFoodItemById(foodItemId);
             foodItem.setPrice(foodItemReq.getPrice());
-            foodItem.setName(foodItem.getName());
-            foodItem.setCategories(foodItem.getCategories());
-            foodItem.setDescription(foodItem.getDescription());
-            foodItem.setQuantity(foodItem.getQuantity());
+            foodItem.setName(foodItemReq.getName());
+            foodItem.setCategories(foodItemReq.getCategories());
+            foodItem.setDescription(foodItemReq.getDescription());
+            foodItem.setQuantity(foodItemReq.getQuantity());
             return foodItem;
         }catch (OptimisticEntityLockException e) {
             throw new ConcurrentModificationException("Failed to update food item due to concurrent modification. Please try again.");

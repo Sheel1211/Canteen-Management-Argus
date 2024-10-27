@@ -1,7 +1,7 @@
-package com.argus.cms.config;
+package com.argus.cms.security.config;
 
-import com.argus.cms.filters.JwtAuthFilter;
-import com.argus.cms.services.UserDetailsServiceImpl;
+import com.argus.cms.security.filters.JwtAuthFilter;
+import com.argus.cms.security.services.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

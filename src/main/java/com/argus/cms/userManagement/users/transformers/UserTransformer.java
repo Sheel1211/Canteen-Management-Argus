@@ -1,5 +1,6 @@
 package com.argus.cms.userManagement.users.transformers;
 
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
@@ -21,7 +22,7 @@ public class UserTransformer {
         return userService.loginUser(userName,password);
     }
 
-    public RegistrationResponseDTO registrationTransformer(RegistrationRequestDTO registrationRequestDTO) throws RecordNotFoundException {
+    public RegistrationResponseDTO registrationTransformer(RegistrationRequestDTO registrationRequestDTO) throws RecordNotFoundException, DataValidationErrorException {
         Users user = userMapper.registrationRequestDTOToUser(registrationRequestDTO);
         Users createdUser = userService.saveUser(user);
         return userMapper.userToRegistrationResponseDTO(createdUser);

@@ -1,8 +1,10 @@
 package com.argus.cms.menuManagement.services;
 
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.entities.Menu;
 import com.argus.cms.menuManagement.repositories.MenuRepository;
+import com.argus.cms.menuManagement.validation.MenuValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,14 +16,17 @@ import java.util.List;
 public class MenuServiceImpl implements MenuService{
 
     private final MenuRepository menuRepository;
+    private final MenuValidator menuValidator;
 
     @Override
     @Transactional
-    public Menu addMenu(Menu menu) {
+    public Menu addMenu(Menu menu) throws RecordNotFoundException, DataValidationErrorException {
+
+        menuValidator.validateCreateMenu(menu,this);
+
         return menuRepository.save(menu);
     }
 
-    //one canteen
     @Override
     @Transactional(readOnly = true)
     public Menu getMenuById(Long menuId) throws RecordNotFoundException {

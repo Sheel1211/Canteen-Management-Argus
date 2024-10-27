@@ -1,5 +1,6 @@
 package com.argus.cms.menuManagement.transformers;
 
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.MenuRequestDTO;
 import com.argus.cms.menuManagement.dtos.MenuResponseDTO;
@@ -17,7 +18,7 @@ public class MenuTransformer {
     private final MenuMapper menuMapper;
     private final MenuService menuService;
 
-    public MenuResponseDTO addMenu(MenuRequestDTO menuRequestDTO) {
+    public MenuResponseDTO addMenu(MenuRequestDTO menuRequestDTO) throws RecordNotFoundException, DataValidationErrorException {
         Menu menu = menuMapper.toEntity(menuRequestDTO);
         Menu addedMenu = menuService.addMenu(menu);
         return menuMapper.toResponseDTO(addedMenu);

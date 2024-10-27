@@ -1,6 +1,7 @@
 package com.argus.cms.userManagement.users.controllers;
 
-import com.argus.cms.config.CustomUserDetails;
+import com.argus.cms.exceptions.DataValidationErrorException;
+import com.argus.cms.security.CustomUserDetails;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.users.dto.LoginRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
@@ -36,11 +37,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) throws RecordNotFoundException {
+    public ResponseEntity<RegistrationResponseDTO> register(@RequestBody RegistrationRequestDTO registrationRequestDTO) throws RecordNotFoundException, DataValidationErrorException {
 //        System.out.println(registrationRequestDTO);
         RegistrationResponseDTO registrationResponseDTO = userTransformer.registrationTransformer(registrationRequestDTO);
         return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
     }
+
 
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #userId == principal.userId")
@@ -52,6 +54,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')  or #userId == principal.userId")
     public ResponseEntity<Object> deleteUserById(@PathVariable Long userId) throws RecordNotFoundException {
         userTransformer.deleteUserByIdTransformer(userId);
         return new ResponseEntity<>("User Deleted Successfully",HttpStatus.OK);

@@ -1,7 +1,7 @@
-package com.argus.cms.filters;
+package com.argus.cms.security.filters;
 
-import com.argus.cms.services.JwtService;
-import com.argus.cms.services.UserDetailsServiceImpl;
+import com.argus.cms.security.services.JwtService;
+import com.argus.cms.security.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.argus.cms.dto;
+package com.argus.cms.security.dto;
 
 
 import lombok.*;

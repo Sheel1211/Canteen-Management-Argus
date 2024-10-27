@@ -1,4 +1,4 @@
-package com.argus.cms.config;
+package com.argus.cms.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -2,7 +2,7 @@ package com.argus.cms.menuManagement.services;
 
 import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.canteenManagement.services.CanteenService;
-import com.argus.cms.config.CustomUserDetails;
+import com.argus.cms.security.CustomUserDetails;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.entities.Category;
 import com.argus.cms.menuManagement.repositories.CategoryRepository;

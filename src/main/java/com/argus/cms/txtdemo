@@ -1,0 +1,147 @@
+public class ValidationResultDto {
+
+    private static final long serialVersionUID = 1L;
+
+    private String element;
+
+    private ErrorLevel level;
+
+    private String message;
+
+    private Object refId;
+
+    public ValidationResultDto() {
+        this.level = ErrorLevel.OK;
+    }
+
+    public ValidationResultDto(String element) {
+        this();
+        this.element = element;
+    }
+
+    public ValidationResultDto(String element, ErrorLevel level, String message) {
+        this.element = element;
+        this.level = level;
+        this.message = message;
+    }
+
+6:32
+
+@Configuration
+public class ValidatorBeanConfig {
+
+    @Bean
+    public Validator validator (final AutowireCapableBeanFactory autowireCapableBeanFactory) {
+        Validator validator;
+        try (ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
+                .configure().constraintValidatorFactory(new SpringConstraintValidatorFactory(autowireCapableBeanFactory))
+                .buildValidatorFactory()) {
+            validator = validatorFactory.getValidator();
+        }
+        return validator;
+    }
+
+}
+
+6:32
+
+@Component
+public class ValidatorSingleton {
+
+    private static Validator validator;
+
+    @Autowired
+    private Validator injectedValidator;
+
+    @PostConstruct
+    public void init() {
+        ValidatorSingleton.validator = this.injectedValidator;
+    }
+
+    public static Validator getValidator() {
+        return validator;
+    }
+
+}
+
+6:32
+
+@Override
+public EntityBean createEntity(EntityBean entityBean) throws InvalidParameterException, DoesNotExistException, OperationFailedException, DataValidationErrorException {
+    entityValidator.validateCreateEntity(entityBean, this);
+    addForeignObjects(entityBean);
+    EntityBean entityBeanCreated = entityRepository.save(entityBean);
+    List<EntityDetail> entityDetailsUpdated = updateExternalValues(entityBean.getEntityDetails(), entityBeanCreated);
+    entityBeanCreated.setEntityDetails(entityDetailsUpdated);
+    return entityBeanCreated;
+}
+
+6:33
+
+public void validateCreateEntity(EntityBean entityBean,EntityService entityService) throws InvalidParameterException, OperationFailedException, DataValidationErrorException, DoesNotExistException {
+    List<ValidationResultDto> errors = validateEntity(ValidationTypeKey.CREATE_VALIDATION, entityService ,entityBean);
+    if (ValidationUtils.containsErrorLevel(errors, ErrorLevel.ERROR)) {
+        LOGGER.error("{}{}", LoggerConstants.DATA_VALIDATION_EXCEPTION, HolidayValidator.class.getSimpleName());
+        throw new DataValidationErrorException(
+                LoggerConstants.ERRORS_OCCURRED,
+                errors);
+    }
+}
+
+6:33
+
+public List<ValidationResultDto> validateEntity(ValidationTypeKey validationTypeKey, EntityService entityService,
+                                                       EntityBean entityBean) throws InvalidParameterException, OperationFailedException, DoesNotExistException {
+    // validate bean validations
+    List<ValidationResultDto> errors = ValidationUtils.validateBeanValidation(entityBean, validationTypeKey);
+
+    // validate common for create and update
+    validateSubCategoryExists(entityBean, errors);
+    validateCompanyTypeExists(entityBean, errors);
+    validateFinancialFormatExists(entityBean, errors);
+
+    switch (validationTypeKey){
+        case CREATE_VALIDATION -> {
+            validateIfEntityCodeAlreadyExists(entityBean, entityService ,errors);
+        }
+        case UPDATE_VALIDATION -> {
+            validateIfEntityCodeDoesNotExists(entityBean, entityService ,errors);
+            validateIsEntityUpdateAllowed(entityBean, entityService, errors);
+        }
+    }
+    return errors;
+}
+
+6:33
+
+public static List<ValidationResultDto> validateBeanValidation(Object object, ValidationTypeKey validationTypeKey){
+    Validator validator = ValidatorSingleton.getValidator();
+    Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
+    return ValidationUtils.getValidationResultDtos(constraintViolations);
+}
+
+6:33
+
+private static List<ValidationResultDto> getValidationResultDtos(Set<ConstraintViolation<Object>> constraintViolations){
+    List<ValidationResultDto> validationResultDtos = new ArrayList<>();
+    for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
+        ValidationResultDto validationResultDto = new ValidationResultDto();
+        validationResultDto.setMessage(constraintViolation.getMessage());
+        validationResultDto.setLevel(ErrorLevel.ERROR);
+        validationResultDto.setElement(constraintViolation.getPropertyPath().toString());
+        validationResultDtos.add(validationResultDto);
+    }
+    return validationResultDtos;
+}
+
+6:35
+
+public void validateCreateEntity(EntityBean entityBean,EntityService entityService) throws InvalidParameterException, OperationFailedException, DataValidationErrorException, DoesNotExistException {
+    List<ValidationResultDto> errors = validateEntity(ValidationTypeKey.CREATE_VALIDATION, entityService ,entityBean);
+    if (ValidationUtils.containsErrorLevel(errors, ErrorLevel.ERROR)) {
+        LOGGER.error("{}{}", LoggerConstants.DATA_VALIDATION_EXCEPTION, HolidayValidator.class.getSimpleName());
+        throw new DataValidationErrorException(
+                LoggerConstants.ERRORS_OCCURRED,
+                errors);
+    }
+}

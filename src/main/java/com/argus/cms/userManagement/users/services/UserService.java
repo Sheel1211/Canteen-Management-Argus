@@ -1,13 +1,14 @@
 package com.argus.cms.userManagement.users.services;
 
-import com.argus.cms.config.CustomUserDetails;
+import com.argus.cms.exceptions.DataValidationErrorException;
+import com.argus.cms.security.CustomUserDetails;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.userManagement.users.entities.Users;
 
 import java.util.List;
 
 public interface UserService {
-    Users saveUser(Users user) throws RecordNotFoundException;
+    Users saveUser(Users user) throws RecordNotFoundException, DataValidationErrorException;
 
     Users findUserById(Long userId) throws RecordNotFoundException;
 

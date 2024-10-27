@@ -1,5 +1,6 @@
 package com.argus.cms.menuManagement.controllers;
 
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.MenuRequestDTO;
 import com.argus.cms.menuManagement.dtos.MenuResponseDTO;
@@ -21,7 +22,7 @@ public class MenuController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
-    public ResponseEntity<MenuResponseDTO> addMenu(@RequestBody MenuRequestDTO menuRequestDTO) {
+    public ResponseEntity<MenuResponseDTO> addMenu(@RequestBody MenuRequestDTO menuRequestDTO) throws RecordNotFoundException, DataValidationErrorException {
         MenuResponseDTO savedMenu = menuTransformer.addMenu(menuRequestDTO);
         return new ResponseEntity<>(savedMenu, HttpStatus.CREATED);
     }

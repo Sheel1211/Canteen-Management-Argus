@@ -1,4 +1,4 @@
-package com.argus.cms.dto;
+package com.argus.cms.globalControllerAdvice;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

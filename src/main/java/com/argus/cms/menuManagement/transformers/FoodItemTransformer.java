@@ -1,5 +1,7 @@
 package com.argus.cms.menuManagement.transformers;
 
+import com.argus.cms.exceptions.ConcurrentModificationException;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
@@ -19,8 +21,7 @@ public class FoodItemTransformer {
     private final FoodItemMapper foodItemMapper;
     private final FoodItemService foodItemService;
 
-    public FoodItemResponseDTO addFoodItem(FoodItemDTO foodItemDTO)
-    {
+    public FoodItemResponseDTO addFoodItem(FoodItemDTO foodItemDTO) throws RecordNotFoundException, DataValidationErrorException {
         FoodItem foodItem = foodItemMapper.toEntity(foodItemDTO);
         FoodItem addedFoodItem = foodItemService.addFoodItem(foodItem);
         return foodItemMapper.toResponseDTO(addedFoodItem);
@@ -31,7 +32,7 @@ public class FoodItemTransformer {
         return foodItemMapper.toResponseDTO(foodItem);
     }
 
-    public  FoodItemResponseDTO updateFoodItem(Long foodItemId,FoodItemDTO foodItemDTO) throws RecordNotFoundException {
+    public  FoodItemResponseDTO updateFoodItem(Long foodItemId,FoodItemDTO foodItemDTO) throws RecordNotFoundException, DataValidationErrorException, ConcurrentModificationException {
         FoodItem reqFoodItem= foodItemMapper.toEntity(foodItemDTO);
         FoodItem updatedFoodItem = foodItemService.updateFoodItem(foodItemId,reqFoodItem);
         return foodItemMapper.toResponseDTO(updatedFoodItem);

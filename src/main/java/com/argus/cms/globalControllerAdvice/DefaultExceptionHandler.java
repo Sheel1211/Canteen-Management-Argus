@@ -1,8 +1,9 @@
-package com.argus.cms.advice;
+package com.argus.cms.globalControllerAdvice;
 
-import com.argus.cms.dto.ErrorResponseDTO;
 import com.argus.cms.exceptions.CustomException;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
+import com.argus.cms.validations.ValidationResultDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -19,9 +20,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @ControllerAdvice
 public class DefaultExceptionHandler {
@@ -78,37 +77,55 @@ public class DefaultExceptionHandler {
     }
 
     @ExceptionHandler(RecordNotFoundException.class)
-    public ResponseEntity<String> handleRecordNotFoundException(RecordNotFoundException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleRecordNotFoundException(RecordNotFoundException ex) {
         logger.error("Record not found: {}", ex.getMessage(), ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(HttpStatus.NOT_FOUND, ex.getMessage(), new Date(System.currentTimeMillis()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
 
     @ExceptionHandler(SQLException.class)
-    public ResponseEntity<String> handleSqlException(SQLException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleSqlException(SQLException ex) {
         logger.error("SQL Error (SQLState: {}, ErrorCode: {}): {}", ex.getSQLState(), ex.getErrorCode(), ex.getMessage());
-        return new ResponseEntity<>("Database error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), new Date(System.currentTimeMillis()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> dataIntegrity(Exception ex) {
-        String errorMessage = ex.getMessage();
-        logger.error("DataIntegrityViolationException: {}",errorMessage);
-        return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorResponseDTO> dataIntegrity(Exception ex) {
+        logger.error("DataIntegrityViolationException: {}", ex.getMessage());
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(HttpStatus.CONFLICT, ex.getMessage(), new Date(System.currentTimeMillis()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<Object> handleCustomException(CustomException ex) {
-        logger.error("error: " + ex.getMessage());
-            return new ResponseEntity<>(ex.getMessage(), ex.getStatusCode());
+    public ResponseEntity<ErrorResponseDTO> handleCustomException(CustomException ex) {
+        logger.error("error: {}" , ex.getMessage());
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(ex.getStatusCode(), ex.getMessage(), new Date(System.currentTimeMillis()));
+        return new ResponseEntity<>(errorResponse, ex.getStatusCode());
     }
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleException(Exception ex) {
         String errorMessage = ex.getMessage();
-        logger.error("Exception: {}",errorMessage);
-        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        logger.error("Exception: {}", errorMessage);
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), new Date(System.currentTimeMillis()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(DataValidationErrorException.class)
+    public ResponseEntity<Map<String, List<String>>> handleDataValidationErrorException(DataValidationErrorException ex) {
+        logger.error("Validation failed using DataValidationErrorException: {}", ex.getMessage());
+
+        Map<String, List<String>> errors = new HashMap<>();
+        List<ValidationResultDTO> validationErrors = ex.getErrors();
+        for (ValidationResultDTO error : validationErrors) {
+            errors.computeIfAbsent(error.getElement(), key -> new ArrayList<>()).add(error.getMessage());
+        }
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
 }

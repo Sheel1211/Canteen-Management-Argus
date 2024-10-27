@@ -1,6 +1,6 @@
-package com.argus.cms.services;
+package com.argus.cms.security.services;
 
-import com.argus.cms.constants.Constants;
+import com.argus.cms.constants.JWTConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,7 +19,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    public static final String SECRET = Constants.JWT_SECRET;
+    public static final String SECRET = JWTConstants.JWT_SECRET;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -63,8 +63,8 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+Constants.JWT_EXPIRATION_TIME))
-                .signWith(getSignKey(), SignatureAlgorithm.valueOf(Constants.JWT_ALGORITHM)).compact();
+                .setExpiration(new Date(System.currentTimeMillis()+ JWTConstants.JWT_EXPIRATION_TIME))
+                .signWith(getSignKey(), SignatureAlgorithm.valueOf(JWTConstants.JWT_ALGORITHM)).compact();
     }
 
     private Key getSignKey() {
