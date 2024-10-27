@@ -6,6 +6,7 @@ import com.argus.cms.canteenManagement.mappers.CanteenManagerMapper;
 import com.argus.cms.canteenManagement.services.CanteenManagerService;
 import com.argus.cms.canteenManagement.services.CanteenService;
 import com.argus.cms.exceptions.CustomException;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class CanteenManagerTransformer {
     private CanteenManagerService canteenManagerService;
     private CanteenService canteenService;
 
-    public CanteenManagerDTO addManagerToCanteen(CanteenManagerDTO canteenManagerDTO) throws CustomException {
+    public CanteenManagerDTO addManagerToCanteen(CanteenManagerDTO canteenManagerDTO) throws CustomException, RecordNotFoundException, DataValidationErrorException {
         CanteenManager canteenManager = canteenManagerMapper.toEntity(canteenManagerDTO);
         CanteenManager savedManager = canteenManagerService.addCanteenManager(canteenManager);
         return canteenManagerMapper.toDTO(savedManager);

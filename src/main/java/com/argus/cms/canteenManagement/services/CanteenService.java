@@ -1,12 +1,13 @@
 package com.argus.cms.canteenManagement.services;
 
 import com.argus.cms.canteenManagement.entities.Canteen;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 
 import java.util.List;
 
 public interface CanteenService {
-    Canteen saveCanteen(Canteen canteen);
+    Canteen saveCanteen(Canteen canteen) throws RecordNotFoundException, DataValidationErrorException;
 
     List<Canteen> getAllCanteens();
 

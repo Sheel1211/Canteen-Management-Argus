@@ -3,6 +3,7 @@ package com.argus.cms.canteenManagement.controllers;
 import com.argus.cms.canteenManagement.dto.CanteenManagerDTO;
 import com.argus.cms.canteenManagement.transformers.CanteenManagerTransformer;
 import com.argus.cms.exceptions.CustomException;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class CanteenManagerController {
 
     @PostMapping
     @PreAuthorize("!hasRole('ROLE_EMPLOYEE')")
-    public ResponseEntity<CanteenManagerDTO> addManagerToCanteen(@RequestBody CanteenManagerDTO canteenManagerDTO) throws CustomException {
+    public ResponseEntity<CanteenManagerDTO> addManagerToCanteen(@RequestBody CanteenManagerDTO canteenManagerDTO) throws CustomException, RecordNotFoundException, DataValidationErrorException {
         CanteenManagerDTO savedCanteenManagerDTO = canteenManagerTransformer.addManagerToCanteen(canteenManagerDTO);
         return new ResponseEntity<>(savedCanteenManagerDTO,HttpStatus.CREATED);
     }

@@ -2,12 +2,13 @@ package com.argus.cms.canteenManagement.services;
 
 import com.argus.cms.canteenManagement.entities.CanteenManager;
 import com.argus.cms.canteenManagement.repositories.CanteenManagerRepository;
+import com.argus.cms.canteenManagement.validation.CanteenManagerValidator;
 import com.argus.cms.exceptions.CustomException;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -15,28 +16,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class CanteenManagerServiceImpl implements CanteenManagerService {
 
     private CanteenManagerRepository canteenManagerRepository;
+    private CanteenManagerValidator canteenManagerValidator;
 
     @Override
     @Transactional
-    public CanteenManager addCanteenManager(CanteenManager canteenManager) throws CustomException {
-        boolean isUserRoleCanteenManager = canteenManager.getManager().getRoles().stream()
-                .anyMatch(role -> role.getName().equals("ROLE_CANTEEN_MANAGER"));
+    public CanteenManager addCanteenManager(CanteenManager canteenManager) throws CustomException, RecordNotFoundException, DataValidationErrorException {
+//        boolean isUserRoleCanteenManager = canteenManager.getManager().getRoles().stream()
+//                .anyMatch(role -> role.getName().equals("ROLE_CANTEEN_MANAGER"));
+//
+//        if (!isUserRoleCanteenManager) {
+//            throw new CustomException("You are not a Canteen Manager!",HttpStatus.FORBIDDEN);
+//        }
+//        CanteenManager isEntryAlreadyExisting = canteenManagerRepository.findByManagerAndCanteen(canteenManager.getManager(),canteenManager.getCanteen()).orElse(null);
+//
+//        if(isEntryAlreadyExisting != null){
+//            throw new CustomException("You have already applied for the same canteen", HttpStatus.FORBIDDEN);
+//        }
+//
+//        CanteenManager alreadyExistingManager = canteenManagerRepository.findByManagerAndIsActiveTrue(canteenManager.getManager()).orElse(null);
+//        boolean isCanteenManagerActiveForAnotherCanteen = alreadyExistingManager != null;
+//
+//        if(isCanteenManagerActiveForAnotherCanteen){
+//            throw new CustomException("You are already active for some other canteen", HttpStatus.FORBIDDEN);
+//        }
 
-        if (!isUserRoleCanteenManager) {
-            throw new CustomException("You are not a Canteen Manager!",HttpStatus.FORBIDDEN);
-        }
-        CanteenManager isEntryAlreadyExisting = canteenManagerRepository.findByManagerAndCanteen(canteenManager.getManager(),canteenManager.getCanteen()).orElse(null);
-
-        if(isEntryAlreadyExisting != null){
-            throw new CustomException("You have already applied for the same canteen", HttpStatus.FORBIDDEN);
-        }
-
-        CanteenManager alreadyExistingManager = canteenManagerRepository.findByManagerAndIsActiveTrue(canteenManager.getManager()).orElse(null);
-        boolean isCanteenManagerActiveForAnotherCanteen = alreadyExistingManager != null;
-
-        if(isCanteenManagerActiveForAnotherCanteen){
-            throw new CustomException("You are already active for some other canteen", HttpStatus.FORBIDDEN);
-        }
+        canteenManagerValidator.validateCreateCanteenManager(canteenManager,this);
         canteenManagerRepository.save(canteenManager);
         return canteenManager;
     }

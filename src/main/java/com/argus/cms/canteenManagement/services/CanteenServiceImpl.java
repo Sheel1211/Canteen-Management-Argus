@@ -2,6 +2,8 @@ package com.argus.cms.canteenManagement.services;
 
 import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.canteenManagement.repositories.CanteenRepository;
+import com.argus.cms.canteenManagement.validation.CanteenValidator;
+import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ import java.util.List;
 public class CanteenServiceImpl implements CanteenService {
 
     private final CanteenRepository canteenRepository;
+    private final CanteenValidator canteenValidator;
 
     @Override
     @Transactional
-    public Canteen saveCanteen(Canteen canteen) {
+    public Canteen saveCanteen(Canteen canteen) throws RecordNotFoundException, DataValidationErrorException {
+        canteenValidator.validateCreateCanteen(canteen,this);
         return canteenRepository.save(canteen);
     }
 
