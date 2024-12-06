@@ -5,7 +5,6 @@ import com.argus.cms.canteenManagement.services.CanteenService;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
-import com.argus.cms.menuManagement.dtos.GetAllFoodItemResponseDTO;
 import com.argus.cms.menuManagement.entities.Category;
 import com.argus.cms.menuManagement.entities.FoodItem;
 import com.argus.cms.menuManagement.services.CategoryService;
@@ -33,10 +32,11 @@ public abstract class FoodItemMapper {
     @Mapping(target = "categories", source = "categories", qualifiedByName = "mapCategoryIdsToCategories")
     public abstract FoodItem toEntity(FoodItemDTO foodItemDTO);
 
+    public abstract List<FoodItemResponseDTO> toResponseDTOList(List<FoodItem> foodItems);
 
-    @Mapping(target= "canteen" , source= "canteen")
-    @Mapping(target= "categories" , source= "categories")
-    public abstract List<GetAllFoodItemResponseDTO> toGetAllResponseDTO(List<FoodItem> foodItems);
+//    @Mapping(target= "canteen" , source= "canteen")
+//    @Mapping(target= "categories" , source= "categories")
+//    public abstract List<GetAllFoodItemResponseDTO> toGetAllResponseDTO(List<FoodItem> foodItems);
 
     @Named("mapCanteenIdToCanteen")
     public Canteen mapCanteen(Long canteenId) throws RecordNotFoundException {

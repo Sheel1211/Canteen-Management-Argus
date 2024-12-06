@@ -17,7 +17,7 @@ public class FoodItemDTO {
     private String name;
     private String description;
     private BigDecimal price;
-    private Integer quantity;
+    private String quantityPerPlate;
     private List<Long> categories;
     private Long canteenId;
 }

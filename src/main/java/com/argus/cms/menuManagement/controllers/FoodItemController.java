@@ -4,8 +4,8 @@ import com.argus.cms.exceptions.ConcurrentModificationException;
 import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
+import com.argus.cms.menuManagement.dtos.FoodItemRequestDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
-import com.argus.cms.menuManagement.dtos.GetAllFoodItemResponseDTO;
 import com.argus.cms.menuManagement.transformers.FoodItemTransformer;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,6 @@ public class FoodItemController {
     @PutMapping("/{foodItemId}")
     @PreAuthorize("hasRole('ROLE_CANTEEN_MANAGER')")
     public ResponseEntity<FoodItemResponseDTO> updateFoodItem(@PathVariable Long foodItemId, @RequestBody FoodItemDTO foodItemReqDTO) throws RecordNotFoundException, DataValidationErrorException, ConcurrentModificationException {
-
         FoodItemResponseDTO foodItem = foodItemTransformer.updateFoodItem(foodItemId,foodItemReqDTO);
         return new ResponseEntity<>(foodItem, HttpStatus.OK);
     }
@@ -49,10 +48,21 @@ public class FoodItemController {
         return new ResponseEntity<>("FoodItem with id: ", HttpStatus.OK);
     }
 
+    @GetMapping("/canteen/{canteenId}")
+    public ResponseEntity<List<FoodItemResponseDTO>> getFoodItemsByCanteenId(@PathVariable Long canteenId) throws RecordNotFoundException {
+        List<FoodItemResponseDTO> foodItems = foodItemTransformer.getFoodItemsByCanteenId(canteenId);
+        return new ResponseEntity<>(foodItems,HttpStatus.OK);
+    }
 
     @GetMapping
-    public ResponseEntity<List<GetAllFoodItemResponseDTO>> getAllFoodItems() {
-        List<GetAllFoodItemResponseDTO> foodItems = foodItemTransformer.getAllFoodItems();
+    public ResponseEntity<List<FoodItemResponseDTO>> getAllFoodItems() {
+        List<FoodItemResponseDTO> foodItems = foodItemTransformer.getAllFoodItems();
         return new ResponseEntity<>(foodItems, HttpStatus.OK);
+    }
+
+    @PostMapping("/category")
+    public ResponseEntity<List<FoodItemResponseDTO>> getFoodItemsByCanteenIdAndCategory(@RequestBody FoodItemRequestDTO foodItemRequestDTO) throws RecordNotFoundException {
+        List<FoodItemResponseDTO> foodItemResponseDTOS = foodItemTransformer.getFoodItemsByCanteenIdAndCategory(foodItemRequestDTO.getCanteenId(),foodItemRequestDTO.getCategoryId());
+        return new ResponseEntity<>(foodItemResponseDTOS, HttpStatus.OK);
     }
 }

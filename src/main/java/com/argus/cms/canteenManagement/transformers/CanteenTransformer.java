@@ -2,6 +2,7 @@ package com.argus.cms.canteenManagement.transformers;
 
 import com.argus.cms.canteenManagement.dto.CanteenRequestDTO;
 import com.argus.cms.canteenManagement.dto.CanteenResponseDTO;
+import com.argus.cms.canteenManagement.dto.CanteenUserDTO;
 import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.canteenManagement.mappers.CanteenMapper;
 import com.argus.cms.canteenManagement.services.CanteenService;
@@ -23,6 +24,11 @@ public class CanteenTransformer {
         Canteen canteen = canteenMapper.toEntity(canteenRequestDTO);
         canteen.setActive(false);
         Canteen createdCanteen = canteenService.saveCanteen(canteen);
+        return canteenMapper.toResponseDTO(createdCanteen);
+    }
+
+    public CanteenResponseDTO ownerRequestToGetCanteenOwnership(CanteenUserDTO canteenUserDTO) throws RecordNotFoundException, DataValidationErrorException {
+        Canteen createdCanteen = canteenService.ownerRequestToGetCanteenOwnership(canteenUserDTO.getCanteenId(),canteenUserDTO.getCanteenUserId());
         return canteenMapper.toResponseDTO(createdCanteen);
     }
 

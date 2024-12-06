@@ -1,10 +1,12 @@
 package com.argus.cms.security;
 
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@ToString
 public class CustomUserDetails implements UserDetails {
     private Long userId;
     private String username;

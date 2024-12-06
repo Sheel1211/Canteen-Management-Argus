@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -17,5 +16,5 @@ public class UserResponseDTO {
     private LocalDateTime createdAt;
     private Integer balance = 0;
     private Boolean isActive;
-    private Set<Roles> roles;
+    private Roles role;
 }

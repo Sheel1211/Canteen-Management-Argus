@@ -4,6 +4,7 @@ import com.argus.cms.security.services.JwtService;
 import com.argus.cms.security.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,9 +38,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = null;
 
         try {
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                token = authHeader.substring(7);
-                username = jwtService.extractUsername(token);
+//            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//                token = authHeader.substring(7);
+//                username = jwtService.extractUsername(token);
+//            }
+
+            if (request.getCookies() != null) {
+                for (Cookie cookie : request.getCookies()) {
+                    if ("token".equals(cookie.getName())) { // Replace "token" with your cookie name
+                        token = cookie.getValue();
+                        username = jwtService.extractUsername(token);
+                        break;
+                    }
+                }
             }
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

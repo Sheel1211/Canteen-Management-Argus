@@ -30,6 +30,12 @@ public class CategoryTransformer {
         return savedCategoryResponseDTO;
     }
 
+    public List<CategoryResponseDTO> getAllCategories() {
+        List<Category> allCategories = categoryService.getAllCategories();
+        List<CategoryResponseDTO> allCategoriesResponseDTO = categoryMapper.toResponseListDTO(allCategories);
+        return allCategoriesResponseDTO;
+    }
+
     public List<CategoryResponseDTO> getAllCategoriesByCanteenId(Long canteenId) throws RecordNotFoundException {
         List<Category> categories = categoryService.findAllCategoriesByCanteenId(canteenId);
         List<CategoryResponseDTO> categoryResponseDTOs= categoryMapper.toResponseListDTO(categories);

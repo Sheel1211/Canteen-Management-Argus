@@ -12,8 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,8 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         Users user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("Record not found with userId"));
 
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(authority -> new
-                SimpleGrantedAuthority(authority.getName())).collect(Collectors.toList());
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName());
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(authority);
 
         return new CustomUserDetails(user.getId(), user.getUserName(), user.getPassword(), authorities);
     }

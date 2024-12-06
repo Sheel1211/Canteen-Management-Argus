@@ -11,6 +11,8 @@ import com.argus.cms.userManagement.users.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 @AllArgsConstructor
 public class UserTransformer {
@@ -18,8 +20,11 @@ public class UserTransformer {
     private UserMapper userMapper;
     private UserService userService;
 
-    public String loginUser(String userName, String password) throws RecordNotFoundException {
-        return userService.loginUser(userName,password);
+    public Map<String,Object> loginUser(String userName, String password) throws RecordNotFoundException {
+        Map<String,Object> responseMap = userService.loginUser(userName,password);
+        responseMap.put("user",userMapper.userToUserResponseDTO((Users) responseMap.get("user")));
+        return responseMap;
+
     }
 
     public RegistrationResponseDTO registrationTransformer(RegistrationRequestDTO registrationRequestDTO) throws RecordNotFoundException, DataValidationErrorException {
@@ -43,6 +48,11 @@ public class UserTransformer {
 
     public UserResponseDTO findUserByUserNameTransformer(String userName) throws RecordNotFoundException {
         Users user = userService.findByUserName(userName);
+        return userMapper.userToUserResponseDTO(user);
+    }
+
+    public UserResponseDTO getCurrentUser() throws RecordNotFoundException {
+        Users user = userService.getCurrentUser();
         return userMapper.userToUserResponseDTO(user);
     }
 }

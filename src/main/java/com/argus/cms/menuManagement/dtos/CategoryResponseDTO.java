@@ -13,6 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryResponseDTO {
+    private Long id;
     private String type;
     private CanteenResponseDTO canteen;
 }

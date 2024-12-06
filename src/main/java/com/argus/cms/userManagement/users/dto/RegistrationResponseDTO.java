@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -19,5 +17,5 @@ public class RegistrationResponseDTO {
     @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
     private String userName;
 
-    private Set<String> roles;
+    private String role;
 }

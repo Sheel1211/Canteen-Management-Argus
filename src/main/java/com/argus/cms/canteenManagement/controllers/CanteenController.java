@@ -27,6 +27,10 @@ public class CanteenController {
         return new ResponseEntity<>(createdCanteen, HttpStatus.CREATED);
     }
 
+    //Owner requests to become canteen owner to the admin
+
+
+
     @GetMapping
     public ResponseEntity<List<CanteenResponseDTO>> getAllCanteens() {
         List<CanteenResponseDTO> canteens = canteenTransformer.getAllCanteens();

@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Menu extends AuditEntity {
 
     @Id
@@ -39,16 +41,11 @@ public class Menu extends AuditEntity {
 
     @Column(name = "menu_date")
     @FutureOrPresent(message = "Menu date must be today or in the future")
-    private LocalDate date_of_menu;
+    private LocalDate dateOfMenu;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "tbl_menu_food_items",
-            joinColumns = @JoinColumn(name = "menu_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_item_id")
-    )
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "menu_id")
     @NotEmpty(message = "At least one food item is required in a menu")
-    private List<FoodItem> foodItems;
+    private List<MenuFoodItem> menuFoodItems;
 }
 

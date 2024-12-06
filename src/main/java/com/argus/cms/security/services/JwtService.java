@@ -13,7 +13,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 @Service
@@ -52,9 +51,9 @@ public class JwtService {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public String GenerateToken(String username, Set<String> roles){
+    public String GenerateToken(String username, String role){
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles",roles);
+        claims.put("role",role);
         return createToken(claims, username);
     }
 

@@ -5,6 +5,8 @@ import com.argus.cms.canteenManagement.repositories.CanteenRepository;
 import com.argus.cms.canteenManagement.validation.CanteenValidator;
 import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
+import com.argus.cms.userManagement.users.entities.Users;
+import com.argus.cms.userManagement.users.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ public class CanteenServiceImpl implements CanteenService {
 
     private final CanteenRepository canteenRepository;
     private final CanteenValidator canteenValidator;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -29,6 +32,14 @@ public class CanteenServiceImpl implements CanteenService {
     @Transactional(readOnly = true)
     public List<Canteen> getAllCanteens() {
         return canteenRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public Canteen ownerRequestToGetCanteenOwnership(Long canteenId, Long userId) throws RecordNotFoundException {
+        Canteen canteen = canteenRepository.findById(canteenId).orElseThrow(() -> new RecordNotFoundException("Canteen not found"));
+        Users canteenOwner = userService.findUserById(userId);
+        return canteen;
     }
 
     @Override

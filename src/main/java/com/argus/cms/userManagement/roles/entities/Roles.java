@@ -11,7 +11,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -34,7 +33,7 @@ public class Roles {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy ="role")
     @JsonIgnore
-    private Set<Users> users = new HashSet<>();
+    private Set<Users> users;
 }

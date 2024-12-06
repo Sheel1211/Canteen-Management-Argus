@@ -9,22 +9,19 @@ import com.argus.cms.userManagement.users.entities.Users;
 import com.argus.cms.userManagement.users.mappers.UserMapper;
 import com.argus.cms.userManagement.users.repositories.UserRepository;
 import com.argus.cms.userManagement.users.validation.UserValidator;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -80,24 +77,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public String loginUser(String userName, String password) throws RecordNotFoundException {
+    public Map<String,Object> loginUser(String userName, String password) throws RecordNotFoundException {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
         Users user = this.findByUserName(userName);
+        System.out.println(authentication.getPrincipal());
 
         if (authentication.isAuthenticated()) {
-            Set<Roles> userRoles = user.getRoles();
-            Set<String> userRolesString = userMapper.mapRolesToRoleNames(userRoles);
-            return jwtService.GenerateToken(userName, userRolesString);
+            Roles userRole = user.getRole();
+            String userRoleString = userMapper.mapRoleToRoleName(userRole);
+            Map<String,Object> objectMap = new HashMap<>();
+            objectMap.put("token",jwtService.GenerateToken(userName, userRoleString));
+            objectMap.put("user",user);
+            return objectMap;
         } else {
             throw new UsernameNotFoundException("invalid user request..!!");
         }
     }
 
     @Override
-    public CustomUserDetails getCurrentUser() {
+    public Users getCurrentUser() throws RecordNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            return (CustomUserDetails) authentication.getPrincipal();
+
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+            return userRepository.findById(customUserDetails.getUserId()).orElseThrow(()->new RecordNotFoundException("User not found."));
         }
         throw new IllegalStateException("No Logged in User Found");
     }

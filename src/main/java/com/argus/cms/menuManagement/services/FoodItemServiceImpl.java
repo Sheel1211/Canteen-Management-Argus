@@ -1,8 +1,11 @@
 package com.argus.cms.menuManagement.services;
 
+import com.argus.cms.canteenManagement.entities.Canteen;
+import com.argus.cms.canteenManagement.services.CanteenService;
 import com.argus.cms.exceptions.ConcurrentModificationException;
 import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
+import com.argus.cms.menuManagement.entities.Category;
 import com.argus.cms.menuManagement.entities.FoodItem;
 import com.argus.cms.menuManagement.repositories.FoodItemRepository;
 import com.argus.cms.menuManagement.validation.FoodItemValidator;
@@ -18,8 +21,9 @@ import java.util.List;
 public class FoodItemServiceImpl implements FoodItemService{
 
     private final FoodItemRepository foodItemRepository;
-
     private final FoodItemValidator foodItemValidator;
+    private final CanteenService canteenService;
+    private final CategoryService categoryService;
     @Override
     @Transactional
     public FoodItem addFoodItem(FoodItem foodItem) throws RecordNotFoundException, DataValidationErrorException {
@@ -51,6 +55,19 @@ public class FoodItemServiceImpl implements FoodItemService{
     }
 
     @Override
+    public List<FoodItem> getFoodItemsByCanteenIdAndCategory(Long canteenId, Long categoryId) throws RecordNotFoundException {
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+        Category category = categoryService.getCategoryById(categoryId);
+        return foodItemRepository.findByCanteenAndCategories(canteen,category);
+    }
+
+    @Override
+    public List<FoodItem> getFoodItemsByCanteenId(Long canteenId) throws RecordNotFoundException {
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+        return foodItemRepository.findByCanteen(canteen);
+    }
+
+    @Override
     @Transactional
     public FoodItem updateFoodItem(Long foodItemId,FoodItem foodItemReq) throws RecordNotFoundException, OptimisticEntityLockException, DataValidationErrorException, ConcurrentModificationException {
 
@@ -65,7 +82,7 @@ public class FoodItemServiceImpl implements FoodItemService{
             foodItem.setName(foodItemReq.getName());
             foodItem.setCategories(foodItemReq.getCategories());
             foodItem.setDescription(foodItemReq.getDescription());
-            foodItem.setQuantity(foodItemReq.getQuantity());
+            foodItem.setQuantityPerPlate(foodItemReq.getQuantityPerPlate());
             return foodItem;
         }catch (OptimisticEntityLockException e) {
             throw new ConcurrentModificationException("Failed to update food item due to concurrent modification. Please try again.");

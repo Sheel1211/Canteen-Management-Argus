@@ -39,18 +39,18 @@ public class MenuValidator {
 
     public List<ValidationResultDTO> validateMenu(ValidationTypeKey validationTypeKey, MenuService menuService,
                                                    Menu menu) throws InvalidParameterException {
-        // validate bean validations
+
         List<ValidationResultDTO> errors = ValidationUtils.validateBeanValidation(menu, validationTypeKey);
 
-        // validate common for create and update
-        validateSameMenuNameExists(menu, errors);
+        validateSameDateOfMenuAndCategoryAndCanteenExists(menu, errors);
         return errors;
     }
 
-    public void validateSameMenuNameExists(Menu menu, List<ValidationResultDTO> errors) {
-        Menu toSavemenu = menuRepository.findByNameAndCanteen(menu.getName(),menu.getCanteen()).orElse(null);
-        if (toSavemenu != null) {
-            errors.add(new ValidationResultDTO("name", ErrorLevel.ERROR, "Menu Name Already Exists in your canteen! Please choose another Menu Name!"));
+    public void validateSameDateOfMenuAndCategoryAndCanteenExists(Menu menu, List<ValidationResultDTO> errors) {
+        Menu alreadyExists = menuRepository.findByDateOfMenuAndCategoryAndCanteen(menu.getDateOfMenu(),menu.getCategory(),menu.getCanteen()).orElse(null);
+        System.out.println("tosave Menu " + alreadyExists);
+        if (alreadyExists != null) {
+            errors.add(new ValidationResultDTO("error", ErrorLevel.ERROR, "Same Day Menu Already exists for " + menu.getCategory().getType()+ " !"));
         }
     }
 

@@ -11,6 +11,8 @@ public interface CanteenService {
 
     List<Canteen> getAllCanteens();
 
+    Canteen ownerRequestToGetCanteenOwnership(Long canteenId, Long userId) throws RecordNotFoundException;
+
     Canteen getCanteenById(Long canteenId) throws RecordNotFoundException;
 
     void deleteCanteenById(Long canteenId) throws RecordNotFoundException;

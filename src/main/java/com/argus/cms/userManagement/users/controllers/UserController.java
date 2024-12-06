@@ -1,8 +1,9 @@
 package com.argus.cms.userManagement.users.controllers;
 
+import com.argus.cms.constants.JWTConstants;
 import com.argus.cms.exceptions.DataValidationErrorException;
-import com.argus.cms.security.CustomUserDetails;
 import com.argus.cms.exceptions.RecordNotFoundException;
+import com.argus.cms.security.CustomUserDetails;
 import com.argus.cms.userManagement.users.dto.LoginRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
@@ -14,14 +15,17 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/auth")
 @AllArgsConstructor
 @Validated
 public class UserController {
@@ -30,10 +34,20 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> Login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) throws RecordNotFoundException {
-        String token = userTransformer.loginUser(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
-        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-        return new ResponseEntity<>("User logged In Successfully",HttpStatus.OK);
+    public ResponseEntity<UserResponseDTO> Login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) throws RecordNotFoundException {
+        Map<String,Object> responseMap = userTransformer.loginUser(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
+//        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        ResponseCookie jwtCookie = ResponseCookie.from("token", (String) responseMap.get("token"))
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(JWTConstants.JWT_EXPIRATION_TIME)
+                .sameSite("strict")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+        return new ResponseEntity<>((UserResponseDTO) responseMap.get("user"),HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -67,8 +81,8 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomUserDetails> getCurrentUser(){
-        CustomUserDetails customUserDetails = userService.getCurrentUser();
-        return new ResponseEntity<>(customUserDetails,HttpStatus.OK);
+    public ResponseEntity<UserResponseDTO> getCurrentUser() throws RecordNotFoundException {
+        UserResponseDTO userResponseDTO = userTransformer.getCurrentUser();
+        return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
     }
 }

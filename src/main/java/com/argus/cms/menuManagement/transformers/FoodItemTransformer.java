@@ -5,7 +5,6 @@ import com.argus.cms.exceptions.DataValidationErrorException;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.menuManagement.dtos.FoodItemDTO;
 import com.argus.cms.menuManagement.dtos.FoodItemResponseDTO;
-import com.argus.cms.menuManagement.dtos.GetAllFoodItemResponseDTO;
 import com.argus.cms.menuManagement.entities.FoodItem;
 import com.argus.cms.menuManagement.mappers.FoodItemMapper;
 import com.argus.cms.menuManagement.services.FoodItemService;
@@ -42,11 +41,19 @@ public class FoodItemTransformer {
         foodItemService.deleteFoodItemById(foodItemId);
     }
 
-    public List<GetAllFoodItemResponseDTO> getAllFoodItems()
+    public List<FoodItemResponseDTO> getAllFoodItems()
     {
         List<FoodItem> foodItems = foodItemService.getAllFoodItems();
-        List<GetAllFoodItemResponseDTO> foodItemResponseDTOS = foodItemMapper.toGetAllResponseDTO(foodItems);
-        return foodItemResponseDTOS;
+        return foodItemMapper.toResponseDTOList(foodItems);
     }
 
+    public List<FoodItemResponseDTO> getFoodItemsByCanteenId(Long canteenId) throws RecordNotFoundException {
+        List<FoodItem> foodItems = foodItemService.getFoodItemsByCanteenId(canteenId);
+        return foodItemMapper.toResponseDTOList(foodItems);
+    }
+
+    public List<FoodItemResponseDTO> getFoodItemsByCanteenIdAndCategory(Long canteenId, Long categoryId) throws RecordNotFoundException {
+        List<FoodItem> foodItems = foodItemService.getFoodItemsByCanteenIdAndCategory(canteenId,categoryId);
+        return foodItemMapper.toResponseDTOList(foodItems);
+    }
 }

@@ -1,7 +1,8 @@
 package com.argus.cms.menuManagement.entities;
 
-import com.argus.cms.canteenManagement.entities.Canteen;
 import com.argus.cms.audit.AuditEntity;
+import com.argus.cms.canteenManagement.entities.Canteen;
+import com.argus.cms.orderManagement.entities.OrderFoodCommon;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +33,10 @@ public class FoodItem extends AuditEntity {
     private String description;
 
     @Min(value = 0, message = "Price cannot be negative")
-    @Digits(integer = 6, fraction = 2, message = "Price must be a valid amount with up to 6 digits and 2 decimal places")
-    private BigDecimal price;
+    private Double price;
 
-    @Min(value = 1, message = "Quantity cannot be less than 1")
-    private Integer quantity;
+    @NotEmpty(message = "Quantity must not be empty")
+    private String quantityPerPlate;
 
     @Version
     private Integer version;
@@ -53,4 +52,10 @@ public class FoodItem extends AuditEntity {
     @NotEmpty(message = "Food item must belong to at least one category")
     @JoinTable(name = "tbl_food_item_category", joinColumns = @JoinColumn(name = "food_item_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL)
+    private List<OrderFoodCommon> orderItems;
+
+    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MenuFoodItem> menuFoodItems;
 }

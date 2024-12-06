@@ -12,35 +12,26 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
     @Autowired
     protected RoleService roleService;
 
-    @Mapping(target = "roles", source = "roles", qualifiedByName = "mapRolesToRoleNames")
+    @Mapping(target = "role", source = "role", qualifiedByName = "mapRoleToRoleName")
     public abstract RegistrationResponseDTO userToRegistrationResponseDTO(Users user);
 
-    @Mapping(target = "roles", source = "roles", qualifiedByName = "mapRoleNamesToRoles")
+    @Mapping(target = "role", source = "role", qualifiedByName = "mapRoleNameToRole")
     public abstract Users registrationRequestDTOToUser(RegistrationRequestDTO userDTO);
 
-    @Named("mapRolesToRoleNames")
-    public Set<String> mapRolesToRoleNames(Set<Roles> roles) {
-        return roles.stream().map(Roles::getName).collect(Collectors.toSet());
+    @Named("mapRoleToRoleName")
+    public String mapRoleToRoleName(Roles role) {
+        return role.getName();
     }
 
-    @Named("mapRoleNamesToRoles")
-    public Set<Roles> mapRoleNamesToRoles(Set<String> roleNames) throws RecordNotFoundException {
-        Set<Roles> roles = new HashSet<>();
-        for (String roleName : roleNames) {
-            Roles role = roleService.findByName(roleName);
-            roles.add(role);
-        }
-        return roles;
+    @Named("mapRoleNameToRole")
+    public Roles mapRoleNameToRole(String roleName) throws RecordNotFoundException {
+        return roleService.findByName(roleName);
     }
 
     public abstract UserResponseDTO userToUserResponseDTO(Users user);

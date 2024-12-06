@@ -78,7 +78,7 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(RecordNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleRecordNotFoundException(RecordNotFoundException ex) {
-        logger.error("Record not found: {}", ex.getMessage(), ex);
+        logger.error("Record not found: {}", ex.getMessage());
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(HttpStatus.NOT_FOUND, ex.getMessage(), new Date(System.currentTimeMillis()));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

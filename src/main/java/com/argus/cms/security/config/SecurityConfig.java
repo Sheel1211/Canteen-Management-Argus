@@ -33,11 +33,14 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = { "/api/v1/auth/**", "/v2/api-docs", "/v3/api-docs",
             "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
             "/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html", "/api/auth/**",
-            "/api/test/**", "/api/user/login" , "/api/user/register","/api/roles/**"};
+            "/api/test/**", "/api/auth/login" , "/api/auth/register","/api/roles/**"};
+
+    @Autowired
+    private CORSCustomizer corsCustomizer;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
+        corsCustomizer.corsCustomizer(http);
         return http.csrf(csrf -> csrf.disable()).
                 authorizeHttpRequests(requests ->
                         requests.requestMatchers(WHITE_LIST_URL)

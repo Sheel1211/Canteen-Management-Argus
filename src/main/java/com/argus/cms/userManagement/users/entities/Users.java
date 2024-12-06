@@ -1,7 +1,6 @@
 package com.argus.cms.userManagement.users.entities;
 
 import com.argus.cms.userManagement.roles.entities.Roles;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -14,8 +13,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_users")
@@ -57,10 +54,9 @@ public class Users  {
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "tbl_user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
-    @JsonIgnore
-    private Set<Roles> roles = new HashSet<>();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Roles role;
 
     @PrePersist
     public void prePersist() {
@@ -71,5 +67,4 @@ public class Users  {
             isActive = true;
         }
     }
-
 }

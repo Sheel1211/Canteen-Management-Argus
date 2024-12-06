@@ -27,6 +27,12 @@ public class CategoryController {
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public ResponseEntity<List<CategoryResponseDTO>> getAllCategories() {
+        List<CategoryResponseDTO> getAllCategories = categoryTransformer.getAllCategories();
+        return new ResponseEntity<>(getAllCategories, HttpStatus.CREATED);
+    }
+
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryResponseDTO> getCategoryById(@PathVariable Long categoryId) throws RecordNotFoundException {
         CategoryResponseDTO categoryResponseDTO = categoryTransformer.getCategoryById(categoryId);

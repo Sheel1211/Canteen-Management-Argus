@@ -19,8 +19,7 @@ public class FoodItemResponseDTO {
     private String name;
     private String description;
     private BigDecimal price;
-    private Integer quantity;
-
+    private String quantityPerPlate;
     private List<CategoryResponseDTO> categories;
     private CanteenResponseDTO canteen;
 }

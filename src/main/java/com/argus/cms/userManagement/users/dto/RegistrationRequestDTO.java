@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,5 +19,5 @@ public class RegistrationRequestDTO {
 //    @Size(min = 4, message = "Password must be at least 4 characters")
     private String password;
 
-    private Set<String> roles;
+    private String role;
 }

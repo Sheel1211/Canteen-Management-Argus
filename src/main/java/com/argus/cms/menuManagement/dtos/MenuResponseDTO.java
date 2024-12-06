@@ -12,10 +12,10 @@ import java.util.List;
 @Setter
 public class MenuResponseDTO {
 
+    private Long id;
     private String name;
-    private LocalDate date_of_menu;
-    private Long categoryId;
+    private LocalDate dateOfMenu;
+    private CategoryResponseDTO category;
     private String canteenName;
-//    private LocalDateTime createdAt;
-    private List<FoodItemResponseDTO> foodItems;
+    private List<MenuFoodItemResponseDTO> menuFoodItemList;
 }

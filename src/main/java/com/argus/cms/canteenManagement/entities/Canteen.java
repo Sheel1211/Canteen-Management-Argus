@@ -28,8 +28,9 @@ public class Canteen extends AuditEntity {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
-//    @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CanteenManager> canteenManagers;
+    private List<CanteenUser> canteenUsers;
+
+
 }
