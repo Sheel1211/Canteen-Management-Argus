@@ -8,7 +8,6 @@ import com.argus.cms.userManagement.users.dto.LoginRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationRequestDTO;
 import com.argus.cms.userManagement.users.dto.RegistrationResponseDTO;
 import com.argus.cms.userManagement.users.dto.UserResponseDTO;
-import com.argus.cms.userManagement.users.services.UserService;
 import com.argus.cms.userManagement.users.transformers.UserTransformer;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -22,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,12 +30,10 @@ import java.util.Map;
 @Validated
 public class UserController {
     private UserTransformer userTransformer;
-    private UserService userService;
-
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> Login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) throws RecordNotFoundException {
-        Map<String,Object> responseMap = userTransformer.loginUser(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
+        Map<String, Object> responseMap = userTransformer.loginUser(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
 //        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         ResponseCookie jwtCookie = ResponseCookie.from("token", (String) responseMap.get("token"))
                 .httpOnly(true)
@@ -47,7 +45,7 @@ public class UserController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
-        return new ResponseEntity<>((UserResponseDTO) responseMap.get("user"),HttpStatus.OK);
+        return new ResponseEntity<>((UserResponseDTO) responseMap.get("user"), HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -64,25 +62,46 @@ public class UserController {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println(customUserDetails.getUserId());
         UserResponseDTO userResponseDTO = userTransformer.findUserByIdTransformer(userId);
-        return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')  or #userId == principal.userId")
     public ResponseEntity<Object> deleteUserById(@PathVariable Long userId) throws RecordNotFoundException {
         userTransformer.deleteUserByIdTransformer(userId);
-        return new ResponseEntity<>("User Deleted Successfully",HttpStatus.OK);
+        return new ResponseEntity<>("User Deleted Successfully", HttpStatus.OK);
     }
 
     @GetMapping("/userName")
     public ResponseEntity<UserResponseDTO> getUserByUserName(@RequestParam String userName) throws RecordNotFoundException {
         UserResponseDTO userResponseDTO = userTransformer.findUserByUserNameTransformer(userName);
-        return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserResponseDTO> getCurrentUser() throws RecordNotFoundException {
         UserResponseDTO userResponseDTO = userTransformer.getCurrentUser();
-        return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{pattern}")
+    public ResponseEntity<List<UserResponseDTO>> fetchUsersByRegex(@PathVariable String pattern) {
+        List<UserResponseDTO> users = userTransformer.findUsersByRegex(pattern);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("strict")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return new ResponseEntity<>("User Logout Successfully", HttpStatus.OK);
     }
 }

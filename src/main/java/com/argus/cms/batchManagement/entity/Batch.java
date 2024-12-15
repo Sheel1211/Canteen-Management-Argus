@@ -1,6 +1,5 @@
 package com.argus.cms.batchManagement.entity;
 
-import com.argus.cms.batchManagement.TimeSlot;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +14,5 @@ public class Batch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Enumerated(EnumType.STRING)
-    private TimeSlot timeSlot;
+    private String timeSlot;
 }

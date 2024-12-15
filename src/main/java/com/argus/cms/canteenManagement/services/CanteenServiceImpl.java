@@ -73,4 +73,9 @@ public class CanteenServiceImpl implements CanteenService {
         fetchedCanteen.setName(canteen.getName());
         return fetchedCanteen;
     }
+
+    @Override
+    public Canteen findByUser(Users user) {
+        return canteenRepository.findByCanteenUsers(user);
+    }
 }

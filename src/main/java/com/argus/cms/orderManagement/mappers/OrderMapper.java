@@ -30,10 +30,12 @@ public abstract class OrderMapper {
     @Autowired
     private OrderItemsMapper orderItemsMapper;
 
-    @Mapping(source = "ordererId",target = "orderer", qualifiedByName = "userIdToUser")
+//    @Mapping(source = "ordererId",target = "orderer", qualifiedByName = "userIdToUser")
     @Mapping(source = "menuId",target = "menu", qualifiedByName = "menuIdToMenu")
     @Mapping(source = "orderItems",target = "orderItems",qualifiedByName = "orderItemsDTOToOrderItems")
     public abstract Order toEntity(OrderDTO orderDTO);
+
+    public abstract List<OrderResponseDTO> toResponseDTOList(List<Order> orders);
 
     @Mapping(source = "id",target = "orderId")
     public abstract OrderResponseDTO toResponseDTO(Order order);

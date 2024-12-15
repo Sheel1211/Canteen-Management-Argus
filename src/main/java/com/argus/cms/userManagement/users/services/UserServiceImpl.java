@@ -95,6 +95,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Users> findUsersByRegex(String pattern) {
+        return userRepository.findUsersByRegex(pattern);
+    }
+
+    @Override
     public Users getCurrentUser() throws RecordNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

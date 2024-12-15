@@ -48,4 +48,3 @@ public class Menu extends AuditEntity {
     @NotEmpty(message = "At least one food item is required in a menu")
     private List<MenuFoodItem> menuFoodItems;
 }
-

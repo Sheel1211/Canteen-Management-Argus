@@ -42,4 +42,8 @@ public class OrderItems {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="transaction_id")
     private Transactions transaction;
+
+//    @ManyToOne
+//    @JoinColumn(name = "canteen_id")
+//    private Canteen canteen;
 }

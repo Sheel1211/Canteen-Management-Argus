@@ -11,6 +11,7 @@ import com.argus.cms.userManagement.users.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -54,5 +55,10 @@ public class UserTransformer {
     public UserResponseDTO getCurrentUser() throws RecordNotFoundException {
         Users user = userService.getCurrentUser();
         return userMapper.userToUserResponseDTO(user);
+    }
+
+    public List<UserResponseDTO> findUsersByRegex(String pattern){
+        List<Users> users = userService.findUsersByRegex(pattern);
+        return userMapper.userListToUserResponseDTOList(users);
     }
 }

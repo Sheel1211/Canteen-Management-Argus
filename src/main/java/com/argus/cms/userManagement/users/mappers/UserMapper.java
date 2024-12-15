@@ -12,6 +12,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
@@ -23,6 +25,8 @@ public abstract class UserMapper {
 
     @Mapping(target = "role", source = "role", qualifiedByName = "mapRoleNameToRole")
     public abstract Users registrationRequestDTOToUser(RegistrationRequestDTO userDTO);
+
+    public abstract List<UserResponseDTO> userListToUserResponseDTOList(List<Users> users);
 
     @Named("mapRoleToRoleName")
     public String mapRoleToRoleName(Roles role) {

@@ -1,12 +1,16 @@
 package com.argus.cms.orderManagement.services;
 
 
+import com.argus.cms.canteenManagement.entities.Canteen;
+import com.argus.cms.canteenManagement.services.CanteenService;
 import com.argus.cms.exceptions.RecordNotFoundException;
 import com.argus.cms.orderManagement.entities.Order;
 import com.argus.cms.orderManagement.entities.OrderFoodCommon;
 import com.argus.cms.orderManagement.entities.OrderItems;
 import com.argus.cms.orderManagement.entities.Transactions;
 import com.argus.cms.orderManagement.repositories.OrderRepository;
+import com.argus.cms.userManagement.users.entities.Users;
+import com.argus.cms.userManagement.users.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +22,16 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
+    private UserService userService;
+    private CanteenService canteenService;
+
 
     @Override
-    public Order createOrder(Order order) {
+    public Order createOrder(Order order) throws RecordNotFoundException {
+
+        Users loggedInUser = userService.getCurrentUser();
+        order.setOrderer(loggedInUser);
+
         double amountPerUser = 0d;
         double totalAmount = 0d;
 
@@ -63,5 +74,14 @@ public class OrderServiceImpl implements OrderService {
         Order order = this.findOrderById(orderId);
         order.setIsCancelled(true);
         return order;
+    }
+
+    @Override
+    public List<Order> viewALlOrdersOfCanteen() throws RecordNotFoundException {
+        Users user = userService.getCurrentUser();
+
+        Canteen canteen = canteenService.findByUser(user);
+
+        return null;
     }
 }

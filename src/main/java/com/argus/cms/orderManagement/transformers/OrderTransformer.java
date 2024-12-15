@@ -9,6 +9,8 @@ import com.argus.cms.orderManagement.services.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @AllArgsConstructor
 public class OrderTransformer {
@@ -16,7 +18,7 @@ public class OrderTransformer {
     private OrderService orderService;
     private OrderMapper orderMapper;
 
-    public OrderResponseDTO createOrder(OrderDTO orderDTO){
+    public OrderResponseDTO createOrder(OrderDTO orderDTO) throws RecordNotFoundException {
         Order order = orderMapper.toEntity(orderDTO);
         Order createdOrder = orderService.createOrder(order);
         return orderMapper.toResponseDTO(createdOrder);
@@ -30,5 +32,10 @@ public class OrderTransformer {
     public OrderResponseDTO cancelOrderById(Long orderId) throws RecordNotFoundException{
         Order order = orderService.cancelOrderById(orderId);
         return null;
+    }
+
+    public List<OrderResponseDTO> viewALlOrdersOfCanteen(){
+        List<Order> orders = orderService.viewALlOrdersOfCanteen();
+        return orderMapper.toResponseDTOList(orders);
     }
 }

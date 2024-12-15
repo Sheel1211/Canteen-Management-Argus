@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/orders")
@@ -17,7 +19,7 @@ public class OrderController {
     private OrderTransformer orderTransformer;
 
     @PostMapping
-    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderDTO orderDTO){
+    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderDTO orderDTO) throws RecordNotFoundException {
         OrderResponseDTO createdOrderDTO = orderTransformer.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrderDTO, HttpStatus.CREATED);
     }
@@ -34,4 +36,9 @@ public class OrderController {
         return new ResponseEntity<>(orderResponseDTO,HttpStatus.OK);
     }
 
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderResponseDTO>> viewAllOrdersOfCanteen(){
+        List<OrderResponseDTO> orders = orderTransformer.viewALlOrdersOfCanteen();
+        return new ResponseEntity<>(orders,HttpStatus.OK);
+    }
 }

@@ -31,6 +31,5 @@ public class Canteen extends AuditEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CanteenUser> canteenUsers;
-
-
+    
 }

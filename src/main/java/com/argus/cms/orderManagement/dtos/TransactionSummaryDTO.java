@@ -5,14 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class OrderDTO {
-//    private Long ordererId;
-    private Long menuId;
-    private List<OrderItemsDTO> orderItems;
+@AllArgsConstructor
+public class TransactionSummaryDTO {
+    private Long otherUserId;
+    private Double netAmount;
+    private String otherUserName;
 }

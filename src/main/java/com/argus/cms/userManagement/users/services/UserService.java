@@ -21,4 +21,6 @@ public interface UserService {
     Map<String,Object> loginUser(String userName, String password) throws RecordNotFoundException;
 
     Users getCurrentUser() throws RecordNotFoundException;
+
+    List<Users> findUsersByRegex(String pattern);
 }

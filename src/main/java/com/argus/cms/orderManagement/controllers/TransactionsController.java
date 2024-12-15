@@ -1,15 +1,15 @@
 package com.argus.cms.orderManagement.controllers;
 
 import com.argus.cms.exceptions.RecordNotFoundException;
+import com.argus.cms.orderManagement.dtos.TransactionSummaryDTO;
 import com.argus.cms.orderManagement.dtos.TransactionsResponseDTO;
 import com.argus.cms.orderManagement.transformers.TransactionTransformer;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -23,5 +23,11 @@ public class TransactionsController {
     {
         TransactionsResponseDTO transactionsResponseDTO = transactionTransformer.getTransactionById(transactionId);
         return new ResponseEntity<>(transactionsResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<TransactionSummaryDTO>> getAllTransactionsOfUser() throws RecordNotFoundException {
+        List<TransactionSummaryDTO> transactions = transactionTransformer.getAllTransactionsOfUser();
+        return new ResponseEntity<>(transactions,HttpStatus.OK);
     }
 }
